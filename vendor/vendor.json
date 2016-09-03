@@ -1,0 +1,139 @@
+{
+	"comment": "",
+	"ignore": "test appengine",
+	"package": [
+		{
+			"path": "appengine",
+			"revision": ""
+		},
+		{
+			"path": "appengine_internal",
+			"revision": ""
+		},
+		{
+			"path": "appengine_internal/base",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "U0dcMjJghtkeDI0oFpZa0pMt8yI=",
+			"path": "cloud.google.com/go/compute/metadata",
+			"revision": "de848b02a4b8d92be5baa2a7ecb17c8ce0194d06",
+			"revisionTime": "2016-08-31T20:50:42Z"
+		},
+		{
+			"checksumSHA1": "hiJXjkFEGy+sDFf6O58Ocdy9Rnk=",
+			"path": "cloud.google.com/go/internal",
+			"revision": "de848b02a4b8d92be5baa2a7ecb17c8ce0194d06",
+			"revisionTime": "2016-08-31T20:50:42Z"
+		},
+		{
+			"checksumSHA1": "sZSeW3Dc6lUqm1CzMUdu3poimoA=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "1f49d83d9aa00e6ce4fc8258c71cc7786aec968a",
+			"revisionTime": "2016-08-24T20:12:15Z"
+		},
+		{
+			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",
+			"path": "golang.org/x/net/context",
+			"revision": "1358eff22f0dd0c54fc521042cc607f6ff4b531a",
+			"revisionTime": "2016-09-01T04:28:38Z"
+		},
+		{
+			"checksumSHA1": "WHc3uByvGaMcnSoI21fhzYgbOgg=",
+			"path": "golang.org/x/net/context/ctxhttp",
+			"revision": "1358eff22f0dd0c54fc521042cc607f6ff4b531a",
+			"revisionTime": "2016-09-01T04:28:38Z"
+		},
+		{
+			"checksumSHA1": "XH7CgbL5Z8COUc+MKrYqS3FFosY=",
+			"path": "golang.org/x/oauth2",
+			"revision": "3c3a985cb79f52a3190fbc056984415ca6763d01",
+			"revisionTime": "2016-08-26T23:14:08Z"
+		},
+		{
+			"checksumSHA1": "92TBjKPPMEcAfNqc2xWF8fSfZMg=",
+			"path": "golang.org/x/oauth2/google",
+			"revision": "3c3a985cb79f52a3190fbc056984415ca6763d01",
+			"revisionTime": "2016-08-26T23:14:08Z"
+		},
+		{
+			"checksumSHA1": "D3v/aqfB9swlaZcSksCoF+lbOqo=",
+			"path": "golang.org/x/oauth2/internal",
+			"revision": "3c3a985cb79f52a3190fbc056984415ca6763d01",
+			"revisionTime": "2016-08-26T23:14:08Z"
+		},
+		{
+			"checksumSHA1": "huVltYnXdRFDJLgp/ZP9IALzG7g=",
+			"path": "golang.org/x/oauth2/jws",
+			"revision": "3c3a985cb79f52a3190fbc056984415ca6763d01",
+			"revisionTime": "2016-08-26T23:14:08Z"
+		},
+		{
+			"checksumSHA1": "McqNj0/805YfYQJQGomeB0s+EcU=",
+			"path": "golang.org/x/oauth2/jwt",
+			"revision": "3c3a985cb79f52a3190fbc056984415ca6763d01",
+			"revisionTime": "2016-08-26T23:14:08Z"
+		},
+		{
+			"checksumSHA1": "xduDNbu9zEufcDc8UNWHoLrip5w=",
+			"path": "google.golang.org/appengine",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "4lEP/dEWOMb4r2Aehu0D9iBDgIU=",
+			"path": "google.golang.org/appengine/internal",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "x6Thdfyasqd68dWZWqzWWeIfAfI=",
+			"path": "google.golang.org/appengine/internal/app_identity",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "TsNO8P0xUlLNyh3Ic/tzSp/fDWM=",
+			"path": "google.golang.org/appengine/internal/base",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "5QsV5oLGSfKZqTCVXP6NRz5T4Tw=",
+			"path": "google.golang.org/appengine/internal/datastore",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "Gep2T9zmVYV8qZfK2gu3zrmG6QE=",
+			"path": "google.golang.org/appengine/internal/log",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "eLZVX1EHLclFtQnjDIszsdyWRHo=",
+			"path": "google.golang.org/appengine/internal/modules",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "a1XY7rz3BieOVqVI2Et6rKiwQCk=",
+			"path": "google.golang.org/appengine/internal/remote_api",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "QtAbHtHmDzcf6vOV9eqlCpKgjiw=",
+			"path": "google.golang.org/appengine/internal/urlfetch",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"checksumSHA1": "akOV9pYnCbcPA8wJUutSQVibdyg=",
+			"path": "google.golang.org/appengine/urlfetch",
+			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
+			"revisionTime": "2016-08-19T23:33:10Z"
+		}
+	],
+	"rootPath": "whats-for-lunch"
+}
