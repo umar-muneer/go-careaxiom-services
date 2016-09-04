@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	HTML = `<html>
+	html = `<html>
             <body>
               <a href="/whats-for-lunch/authenticate/login">Log in with Google</a>
             </body>
           </html>`
-	BASE_URL         = "/whats-for-lunch/authenticate"
-	CREDENTIALS_FILE = "lunch.credentials"
+	baseURL         = "/whats-for-lunch/authenticate"
+	credentialsFile = "lunch.credentials"
 )
 
 var oauthConfig = &oauth2.Config{
@@ -34,7 +34,7 @@ var oauthState = "why do i need you??"
 
 func saveToken(token *oauth2.Token) error {
 	fmt.Println("saving token to file")
-	file, err := os.Create(CREDENTIALS_FILE)
+	file, err := os.Create(credentialsFile)
 	if err != nil {
 		errorText := "cannot create token credentials file"
 		fmt.Println(errorText)
@@ -47,17 +47,17 @@ func saveToken(token *oauth2.Token) error {
 
 func loadToken() (*oauth2.Token, error) {
 	fmt.Println("loading token from file")
-	file, err := os.Open(CREDENTIALS_FILE)
+	file, err := os.Open(credentialsFile)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 	token := &oauth2.Token{}
 	decodeErr := json.NewDecoder(file).Decode(token)
-
 	return token, decodeErr
 }
 
+/*GetClient get an http client to talk to google spreadsheets*/
 func GetClient() (*http.Client, error) {
 	token, err := loadToken()
 	if err != nil {
@@ -67,15 +67,18 @@ func GetClient() (*http.Client, error) {
 	return client, nil
 }
 
+/*LoginHandler main controller method which redirects the browser to a page to authorize the app*/
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
 	url := oauthConfig.AuthCodeURL(oauthState)
 	http.Redirect(res, req, url, http.StatusTemporaryRedirect)
 }
+
+/*RedirectHandler this is where the google page redirects to send the token information*/
 func RedirectHandler(res http.ResponseWriter, req *http.Request) {
 	state := req.FormValue("state")
 	if state != oauthState {
 		fmt.Println("invalid state variable received")
-		http.Redirect(res, req, BASE_URL, http.StatusTemporaryRedirect)
+		http.Redirect(res, req, baseURL, http.StatusTemporaryRedirect)
 		return
 	}
 	token, err := oauthConfig.Exchange(context.Background(), req.FormValue("code"))
@@ -89,7 +92,9 @@ func RedirectHandler(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "cannot save token to file", http.StatusInternalServerError)
 	}
 }
+
+/*BaseHandler used to launch the entire authentication process*/
 func BaseHandler(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("printing base authentication page")
-	fmt.Fprintf(res, HTML)
+	fmt.Fprintf(res, html)
 }
