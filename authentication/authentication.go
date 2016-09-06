@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"errors"
 
+	"whats-for-lunch/filetransfer"
+
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -41,7 +43,14 @@ func saveToken(token *oauth2.Token) error {
 		return errors.New(errorText)
 	}
 	defer file.Close()
-	json.NewEncoder(file).Encode(token)
+	s3Writer := &filetransfer.S3IOWriter{
+		Bucket: os.Getenv("AWS_S3_BUCKET"),
+		Key:    "whats-for-lunch/lunch.credentials",
+	}
+	writeError := json.NewEncoder(s3Writer).Encode(token)
+	if writeError != nil {
+		return writeError
+	}
 	return nil
 }
 
@@ -89,6 +98,7 @@ func RedirectHandler(res http.ResponseWriter, req *http.Request) {
 	}
 	saveErr := saveToken(token)
 	if saveErr != nil {
+		fmt.Println(saveErr)
 		http.Error(res, "cannot save token to file", http.StatusInternalServerError)
 	}
 }
