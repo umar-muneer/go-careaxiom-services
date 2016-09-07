@@ -9,16 +9,15 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-/*S3IOWriter a struct implement the io.Writer interface*/
-type S3IOWriter struct {
+/*S3IO a struct implement the io.Writer interface*/
+type S3IO struct {
 	Bucket string
 	Key    string
 }
 
-func (s S3IOWriter) Write(p []byte) (int, error) {
+func (s S3IO) Write(p []byte) (int, error) {
 	session, sessionErr := session.NewSession()
 	if sessionErr != nil {
-		fmt.Println("error while creating aws session")
 		return 0, sessionErr
 	}
 
@@ -31,5 +30,26 @@ func (s S3IOWriter) Write(p []byte) (int, error) {
 	if uploadError != nil {
 		return 0, uploadError
 	}
+	return len(p), nil
+}
+
+func (s S3IO) Read(p []byte) (int, error) {
+	session, sessionErr := session.NewSession()
+	if sessionErr != nil {
+		return 0, sessionErr
+	}
+	svc := s3.New(session)
+	output, copyError := svc.GetObject(&s3.GetObjectInput{
+		Bucket: aws.String(s.Bucket),
+		Key:    aws.String(s.Key),
+	})
+	if copyError != nil {
+		return 0, copyError
+	}
+	noOfBytes, readError := output.Body.Read(p)
+	if readError != nil {
+		return noOfBytes, readError
+	}
+	fmt.Println(p)
 	return len(p), nil
 }

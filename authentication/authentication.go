@@ -43,7 +43,7 @@ func saveToken(token *oauth2.Token) error {
 		return errors.New(errorText)
 	}
 	defer file.Close()
-	s3Writer := &filetransfer.S3IOWriter{
+	s3Writer := &filetransfer.S3IO{
 		Bucket: os.Getenv("AWS_S3_BUCKET"),
 		Key:    "whats-for-lunch/lunch.credentials",
 	}
@@ -56,13 +56,12 @@ func saveToken(token *oauth2.Token) error {
 
 func loadToken() (*oauth2.Token, error) {
 	fmt.Println("loading token from file")
-	file, err := os.Open(credentialsFile)
-	if err != nil {
-		return nil, err
+	s3Reader := &filetransfer.S3IO{
+		Bucket: os.Getenv("AWS_S3_BUCKET"),
+		Key:    "whats-for-lunch/lunch.credentials",
 	}
-	defer file.Close()
 	token := &oauth2.Token{}
-	decodeErr := json.NewDecoder(file).Decode(token)
+	decodeErr := json.NewDecoder(s3Reader).Decode(token)
 	return token, decodeErr
 }
 
@@ -70,9 +69,11 @@ func loadToken() (*oauth2.Token, error) {
 func GetClient() (*http.Client, error) {
 	token, err := loadToken()
 	if err != nil {
+		fmt.Println("error while loading token", err.Error())
 		return nil, errors.New("refresh token not found, cannot proceed further")
 	}
 	client := oauthConfig.Client(context.Background(), token)
+	fmt.Println(token.RefreshToken, ":", token.AccessToken)
 	return client, nil
 }
 

@@ -19,7 +19,7 @@ func GetTomorrowsMenu(res http.ResponseWriter, req *http.Request) {
 	_, err := authentication.GetClient()
 	if err != nil {
 		fmt.Println(err)
-		http.Error(res, "can't load tomorrow's menu", http.StatusInternalServerError)
+		http.Error(res, err.Error(), http.StatusInternalServerError)
 	}
 	json.NewEncoder(res).Encode(Menu{New: "Biryani", Old: "Karahi"})
 }
