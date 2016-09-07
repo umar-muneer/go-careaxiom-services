@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"whats-for-lunch/sources/spreadsheet"
-
+	"log"
 	"whats-for-lunch/authentication"
+	"whats-for-lunch/sources/spreadsheet"
 )
 
 func main() {
@@ -16,5 +16,5 @@ func main() {
 	http.HandleFunc("/whats-for-lunch/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch/tomorrow", spreadsheet.GetTomorrowsMenu)
 	fmt.Println("starting server here")
-	http.ListenAndServe("0.0.0.0:8081", nil)
+	log.Fatal(http.ListenAndServe("0.0.0.0:8081", nil))
 }
