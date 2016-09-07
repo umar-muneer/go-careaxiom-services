@@ -16,5 +16,5 @@ func main() {
 	http.HandleFunc("/whats-for-lunch/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch/tomorrow", spreadsheet.GetTomorrowsMenu)
 	fmt.Println("starting server here")
-	http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(":3003", nil)
 }
