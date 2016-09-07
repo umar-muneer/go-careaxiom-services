@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"log"
+	"os"
 	"whats-for-lunch/authentication"
 	"whats-for-lunch/sources/spreadsheet"
 )
@@ -16,5 +17,11 @@ func main() {
 	http.HandleFunc("/whats-for-lunch/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch/tomorrow", spreadsheet.GetTomorrowsMenu)
 	fmt.Println("starting server here")
-	log.Fatal(http.ListenAndServe("0.0.0.0:8081", nil))
+	var port = ":"
+	if os.Getenv("PORT") != "" {
+		port += os.Getenv("PORT")
+	} else {
+		port += "8081"
+	}
+	log.Fatal(http.ListenAndServe(port, nil))
 }
