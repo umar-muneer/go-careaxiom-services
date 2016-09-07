@@ -2,7 +2,6 @@ package filetransfer
 
 import (
 	"bytes"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -50,6 +49,5 @@ func (s S3IO) Read(p []byte) (int, error) {
 	if readError != nil {
 		return noOfBytes, readError
 	}
-	fmt.Println(p)
 	return len(p), nil
 }
