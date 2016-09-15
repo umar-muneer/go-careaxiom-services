@@ -15,7 +15,7 @@ func main() {
 	http.HandleFunc("/whats-for-lunch/authenticate", authentication.BaseHandler)
 	http.HandleFunc("/whats-for-lunch/authenticate/login", authentication.LoginHandler)
 	http.HandleFunc("/whats-for-lunch/authenticate/redirect", authentication.RedirectHandler)
-	http.HandleFunc("/whats-for-lunch/tomorrow", spreadsheet.GetTomorrowsMenu)
+	http.HandleFunc("/whats-for-lunch", spreadsheet.GetMenu)
 	fmt.Println("starting server here")
 	var port = ":"
 	if os.Getenv("PORT") != "" {
