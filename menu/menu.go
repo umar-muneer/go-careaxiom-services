@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -40,11 +41,9 @@ func (menu Menu) GetMenuEntry(date string) error {
 	if err != nil {
 		return err
 	}
-	column := menu.sheetOffset + dayTime.Day()
-	cellRange := "A6:E6"
-	fmt.Println(column, "!!!!!")
+	column := strconv.Itoa(menu.sheetOffset + dayTime.Day())
+	cellRange := "A" + string(column) + ":" + "E" + string(column)
 	url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange
-	fmt.Println(url, "#####")
 	response, responseErr := menu.client.Get(url)
 	if responseErr != nil {
 		return responseErr
