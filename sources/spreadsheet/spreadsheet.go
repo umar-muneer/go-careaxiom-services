@@ -1,6 +1,7 @@
 package spreadsheet
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -27,19 +28,20 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	}
 	offset, _ := strconv.Atoi(os.Getenv("OLD_MENU_SHEET_OFFSET"))
 	oldMenu := menu.New(spreadSheetClient, os.Getenv("OLD_MENU_SPREADSHEET_ID"), offset)
-	menuEntryErr := oldMenu.GetMenuEntry(req.URL.Query().Get("date"))
-	if menuEntryErr != nil {
-		fmt.Println(menuEntryErr)
-		http.Error(res, menuEntryErr.Error(), http.StatusInternalServerError)
+	oldMenuEntry, oldMenuEntryErr := oldMenu.GetMenuEntry(req.URL.Query().Get("date"))
+	if oldMenuEntryErr != nil {
+		fmt.Println("Error while getting old menu entry -> ", oldMenuEntryErr)
+		http.Error(res, oldMenuEntryErr.Error(), http.StatusInternalServerError)
 	}
-	// var oldURL = apiURL + "/" + os.Getenv("OLD_MENU_SPREADSHEET_ID") + "/values" + "/A6:E36"
-	// fmt.Println("spreadsheet url is", oldURL)
-	// spreadSheetResponse, spreadSheetErr := spreadSheetClient.Get(oldURL)
-	// if spreadSheetErr != nil {
-	// 	fmt.Println("error reading from spreadsheet", spreadSheetErr.Error())
-	// 	http.Error(res, spreadSheetErr.Error(), http.StatusInternalServerError)
-	// }
-	// output, _ := ioutil.ReadAll(spreadSheetResponse.Body)
-	// fmt.Println(string(output[:]), "yayayaya")
-	//json.NewEncoder(res).Encode(Output{New: "Biryani", Old: "Karahi"})
+	newOffset, _ := strconv.Atoi(os.Getenv("NEW_MENU_SHEET_OFFSET"))
+	newMenu := menu.New(spreadSheetClient, os.Getenv("NEW_MENU_SPREADSHEET_ID"), newOffset)
+	newMenuEntry, newMenuEntryErr := newMenu.GetMenuEntry(req.URL.Query().Get("date"))
+	if newMenuEntryErr != nil {
+		fmt.Println("Error while getting new menu entry", newMenuEntryErr)
+		http.Error(res, newMenuEntryErr.Error(), http.StatusInternalServerError)
+	}
+	json.NewEncoder(res).Encode(Output{
+		Old: *oldMenuEntry,
+		New: *newMenuEntry,
+	})
 }

@@ -11,28 +11,40 @@ import (
 
 /*Entry represent a menu for a day*/
 type Entry struct {
-	MainDish     string
-	SecondarDish string
-	Dessert      string
+	MainDish      string
+	SecondaryDish string
+	Dessert       string
 }
 
-/*Menu can contain multiple menu entries*/
-type Menu struct {
+func (entry *Entry) newEntry(data []string) *Entry {
+	var dessert = ""
+	if len(data) > 4 {
+		dessert = data[4]
+	}
+
+	return &Entry{
+		MainDish:      data[2],
+		SecondaryDish: data[3],
+		Dessert:       dessert,
+	}
+}
+
+/*SpreadSheetMenu can contain multiple menu entries*/
+type SpreadSheetMenu struct {
 	Entries     []Entry
 	client      *http.Client
 	sheetID     string
 	sheetOffset int
 }
 
-/*SpreadSheetOutput contains mapped json output*/
-type SpreadSheetOutput struct {
+type spreadSheetOutput struct {
 	Range  string
 	Values [][]string
 }
 
 /*New create new menu. can be old or new based on arguments*/
-func New(client *http.Client, sheetID string, sheetOffset int) *Menu {
-	return &Menu{
+func New(client *http.Client, sheetID string, sheetOffset int) *SpreadSheetMenu {
+	return &SpreadSheetMenu{
 		client:      client,
 		sheetID:     sheetID,
 		sheetOffset: sheetOffset,
@@ -42,10 +54,10 @@ func New(client *http.Client, sheetID string, sheetOffset int) *Menu {
 /*GetMenuEntry gets a menu entry for a given date
   date required date in the format DD/MM/YYYY, start of day in Asia/Karachi timezone
 */
-func (menu Menu) GetMenuEntry(date string) (*SpreadSheetOutput, error) {
+func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
 	dayTime, err := time.Parse("01/01/2006", date)
 	if err != nil {
-		return new(SpreadSheetOutput), err
+		return new(Entry), err
 	}
 	column := strconv.Itoa(menu.sheetOffset + dayTime.Day())
 	cellRange := "A" + string(column) + ":" + "E" + string(column)
@@ -54,16 +66,20 @@ func (menu Menu) GetMenuEntry(date string) (*SpreadSheetOutput, error) {
 	req.Header.Add("Accept", "application/json")
 	response, responseErr := menu.client.Do(req)
 	if responseErr != nil {
-		return new(SpreadSheetOutput), responseErr
+		return new(Entry), responseErr
 	}
 	output, readErr := ioutil.ReadAll(response.Body)
 	if readErr != nil {
-		return new(SpreadSheetOutput), readErr
+		return new(Entry), readErr
 	}
-	spreadSheetOutput := new(SpreadSheetOutput)
+	spreadSheetOutput := new(spreadSheetOutput)
 	marshalError := json.Unmarshal(output, spreadSheetOutput)
 	if marshalError != nil {
-		return new(SpreadSheetOutput), marshalError
+		return new(Entry), marshalError
 	}
-	return spreadSheetOutput, nil
+	menuEntry := &Entry{
+		MainDish: spreadSheetOutput.Values[0][2],
+	}
+
+	return menuEntry, nil
 }
