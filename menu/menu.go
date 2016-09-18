@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"fmt"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -24,6 +24,12 @@ type Menu struct {
 	sheetOffset int
 }
 
+/*SpreadSheetOutput contains mapped json output*/
+type SpreadSheetOutput struct {
+	Range  string
+	Values [][]string
+}
+
 /*New create new menu. can be old or new based on arguments*/
 func New(client *http.Client, sheetID string, sheetOffset int) *Menu {
 	return &Menu{
@@ -36,22 +42,28 @@ func New(client *http.Client, sheetID string, sheetOffset int) *Menu {
 /*GetMenuEntry gets a menu entry for a given date
   date required date in the format DD/MM/YYYY, start of day in Asia/Karachi timezone
 */
-func (menu Menu) GetMenuEntry(date string) error {
-	dayTime, err := time.Parse("01/1/2006", date)
+func (menu Menu) GetMenuEntry(date string) (*SpreadSheetOutput, error) {
+	dayTime, err := time.Parse("01/01/2006", date)
 	if err != nil {
-		return err
+		return new(SpreadSheetOutput), err
 	}
 	column := strconv.Itoa(menu.sheetOffset + dayTime.Day())
 	cellRange := "A" + string(column) + ":" + "E" + string(column)
 	url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange
-	response, responseErr := menu.client.Get(url)
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Add("Accept", "application/json")
+	response, responseErr := menu.client.Do(req)
 	if responseErr != nil {
-		return responseErr
+		return new(SpreadSheetOutput), responseErr
 	}
 	output, readErr := ioutil.ReadAll(response.Body)
 	if readErr != nil {
-		return readErr
+		return new(SpreadSheetOutput), readErr
 	}
-	fmt.Println(string(output[:]))
-	return nil
+	spreadSheetOutput := new(SpreadSheetOutput)
+	marshalError := json.Unmarshal(output, spreadSheetOutput)
+	if marshalError != nil {
+		return new(SpreadSheetOutput), marshalError
+	}
+	return spreadSheetOutput, nil
 }
