@@ -32,6 +32,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	if oldMenuEntryErr != nil {
 		fmt.Println("Error while getting old menu entry -> ", oldMenuEntryErr)
 		http.Error(res, oldMenuEntryErr.Error(), http.StatusInternalServerError)
+		return
 	}
 	newOffset, _ := strconv.Atoi(os.Getenv("NEW_MENU_SHEET_OFFSET"))
 	newMenu := menu.New(spreadSheetClient, os.Getenv("NEW_MENU_SPREADSHEET_ID"), newOffset)
@@ -39,6 +40,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	if newMenuEntryErr != nil {
 		fmt.Println("Error while getting new menu entry", newMenuEntryErr)
 		http.Error(res, newMenuEntryErr.Error(), http.StatusInternalServerError)
+		return
 	}
 	json.NewEncoder(res).Encode(Output{
 		Old: *oldMenuEntry,
