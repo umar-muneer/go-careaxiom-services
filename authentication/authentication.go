@@ -73,7 +73,7 @@ func GetClient() (*http.Client, error) {
 		return nil, errors.New("refresh token not found, cannot proceed further")
 	}
 	client := oauthConfig.Client(context.Background(), token)
-	fmt.Println(token.RefreshToken, ":", token.AccessToken, ":", token.Expiry)
+	fmt.Println("RT:", token.RefreshToken, ", AT:", token.AccessToken, ", Expiry:", token.Expiry)
 	return client, nil
 }
 
