@@ -25,6 +25,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	offset, _ := strconv.Atoi(os.Getenv("OLD_MENU_SHEET_OFFSET"))
 	oldMenu := menu.New(spreadSheetClient, os.Getenv("OLD_MENU_SPREADSHEET_ID"), offset)
