@@ -69,6 +69,12 @@ func New(client *http.Client, sheetID string, sheetOffset int, title string) *Sp
   date required date in the format MMM/DD/YYYY, start of day in Asia/Karachi timezone
 */
 func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
+
+	if menu.sheetID == "" {
+		fmt.Println("Menu disabled for now, the caterer is probably on leave")
+		return &Entry{Title: menu.title}, nil
+	}
+
 	dayTime, err := time.Parse("02/01/2006", date)
 	fmt.Println("requested day time is", dayTime)
 	if err != nil {

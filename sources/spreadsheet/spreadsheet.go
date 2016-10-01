@@ -27,6 +27,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println("retrieving data for old menu")
 	offset, _ := strconv.Atoi(os.Getenv("OLD_MENU_SHEET_OFFSET"))
 	oldMenu := menu.New(spreadSheetClient, os.Getenv("OLD_MENU_SPREADSHEET_ID"), offset, os.Getenv("OLD_MENU_TITLE"))
 	oldMenuEntry, oldMenuEntryErr := oldMenu.GetMenuEntry(req.URL.Query().Get("date"))
@@ -35,6 +36,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, oldMenuEntryErr.Error(), http.StatusInternalServerError)
 		return
 	}
+	fmt.Println("retrieving data for new menu")
 	newOffset, _ := strconv.Atoi(os.Getenv("NEW_MENU_SHEET_OFFSET"))
 	newMenu := menu.New(spreadSheetClient, os.Getenv("NEW_MENU_SPREADSHEET_ID"), newOffset, os.Getenv("NEW_MENU_TITLE"))
 	newMenuEntry, newMenuEntryErr := newMenu.GetMenuEntry(req.URL.Query().Get("date"))
