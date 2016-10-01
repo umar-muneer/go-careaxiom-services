@@ -12,12 +12,13 @@ import (
 
 /*Entry represent a menu for a day*/
 type Entry struct {
+	Title         string
 	MainDish      string
 	SecondaryDish string
 	Dessert       string
 }
 
-func newEntry(data []string) *Entry {
+func newEntry(data []string, title string) *Entry {
 	var dessert = ""
 	var secondaryDish = ""
 	var mainDish = ""
@@ -33,6 +34,7 @@ func newEntry(data []string) *Entry {
 	}
 
 	return &Entry{
+		Title:         title,
 		MainDish:      mainDish,
 		SecondaryDish: secondaryDish,
 		Dessert:       dessert,
@@ -45,6 +47,7 @@ type SpreadSheetMenu struct {
 	client      *http.Client
 	sheetID     string
 	sheetOffset int
+	title       string
 }
 
 type spreadSheetOutput struct {
@@ -53,11 +56,12 @@ type spreadSheetOutput struct {
 }
 
 /*New create new menu. can be old or new based on arguments*/
-func New(client *http.Client, sheetID string, sheetOffset int) *SpreadSheetMenu {
+func New(client *http.Client, sheetID string, sheetOffset int, title string) *SpreadSheetMenu {
 	return &SpreadSheetMenu{
 		client:      client,
 		sheetID:     sheetID,
 		sheetOffset: sheetOffset,
+		title:       title,
 	}
 }
 
@@ -90,6 +94,6 @@ func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
 	if marshalError != nil {
 		return new(Entry), marshalError
 	}
-	menuEntry := newEntry(spreadSheetOutput.Values[0])
+	menuEntry := newEntry(spreadSheetOutput.Values[0], menu.title)
 	return menuEntry, nil
 }
