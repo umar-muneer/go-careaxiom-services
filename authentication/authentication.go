@@ -93,7 +93,7 @@ func RedirectHandler(res http.ResponseWriter, req *http.Request) {
 	}
 	token, err := oauthConfig.Exchange(context.Background(), req.FormValue("code"))
 	if err != nil {
-		fmt.Println("failed to recive token")
+		fmt.Println("failed to receive token")
 		http.Error(res, "failed to receive token", http.StatusInternalServerError)
 		return
 	}
