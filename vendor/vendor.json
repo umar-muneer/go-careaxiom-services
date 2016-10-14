@@ -31,10 +31,6 @@
 			"revision": ""
 		},
 		{
-			"path": "git",
-			"revision": ""
-		},
-		{
 			"checksumSHA1": "UN8gKREzowlQIH6xM5GJVOBhDYM=",
 			"path": "github.com/aws/aws-sdk-go",
 			"revision": "6ac30507cca29249f4d49af45a8efc98b84088ee",
@@ -209,6 +205,18 @@
 			"revisionTime": "2016-08-03T19:07:31Z"
 		},
 		{
+			"checksumSHA1": "4JR/jdpCTqg3XL0Fu8Lg1FkDj/U=",
+			"path": "go-careaxiom-utilities/authentication",
+			"revision": "1839ea7029c8f56a1b6354a7000a43b65fb21c06",
+			"revisionTime": "2016-10-13T05:06:26Z"
+		},
+		{
+			"checksumSHA1": "tDCa+XvwAyp1EKGHtGIwU3wPkYc=",
+			"path": "go-careaxiom-utilities/filetransfer",
+			"revision": "1839ea7029c8f56a1b6354a7000a43b65fb21c06",
+			"revisionTime": "2016-10-13T05:06:26Z"
+		},
+		{
 			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",
 			"path": "golang.org/x/net/context",
 			"revision": "1358eff22f0dd0c54fc521042cc607f6ff4b531a",
@@ -309,6 +317,14 @@
 			"path": "google.golang.org/appengine/urlfetch",
 			"revision": "4f7eeb5305a4ba1966344836ba4af9996b7b4e05",
 			"revisionTime": "2016-08-19T23:33:10Z"
+		},
+		{
+			"path": "https://github.com/umar-muneer/go-careaxiom-utilities",
+			"revision": ""
+		},
+		{
+			"path": "https://github.com/umar-muneer/go-careaxiom-utilities.git",
+			"revision": ""
 		},
 		{
 			"path": "status",
