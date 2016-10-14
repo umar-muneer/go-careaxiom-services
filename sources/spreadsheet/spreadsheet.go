@@ -3,11 +3,12 @@ package spreadsheet
 import (
 	"encoding/json"
 	"fmt"
-	"go-careaxiom-utilities/authentication"
 	"net/http"
 	"os"
 	"strconv"
 	"whats-for-lunch/menu"
+
+	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
 )
 
 var apiURL = "https://sheets.googleapis.com/v4/spreadsheets"

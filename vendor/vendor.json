@@ -205,16 +205,26 @@
 			"revisionTime": "2016-08-03T19:07:31Z"
 		},
 		{
-			"checksumSHA1": "4JR/jdpCTqg3XL0Fu8Lg1FkDj/U=",
-			"path": "go-careaxiom-utilities/authentication",
-			"revision": "1839ea7029c8f56a1b6354a7000a43b65fb21c06",
-			"revisionTime": "2016-10-13T05:06:26Z"
+			"checksumSHA1": "ZJDOG0lysIL2WymY+fmM0xmOYC0=",
+			"path": "github.com/umar-muneer/go-careaxiom-utilities",
+			"revision": "d7df21abfc5334a455815a73b267eb28d4ae2da4",
+			"revisionTime": "2016-10-13T08:27:11Z"
 		},
 		{
-			"checksumSHA1": "tDCa+XvwAyp1EKGHtGIwU3wPkYc=",
+			"checksumSHA1": "jLSVT4LqGUa4IiCp4dOcDxHdyno=",
+			"path": "github.com/umar-muneer/go-careaxiom-utilities/authentication",
+			"revision": "d7df21abfc5334a455815a73b267eb28d4ae2da4",
+			"revisionTime": "2016-10-13T08:27:11Z"
+		},
+		{
+			"checksumSHA1": "omAtYoxgdSYJfv5u1MX8qPX40hE=",
+			"path": "github.com/umar-muneer/go-careaxiom-utilities/filetransfer",
+			"revision": "d7df21abfc5334a455815a73b267eb28d4ae2da4",
+			"revisionTime": "2016-10-13T08:27:11Z"
+		},
+		{
 			"path": "go-careaxiom-utilities/filetransfer",
-			"revision": "1839ea7029c8f56a1b6354a7000a43b65fb21c06",
-			"revisionTime": "2016-10-13T05:06:26Z"
+			"revision": ""
 		},
 		{
 			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",

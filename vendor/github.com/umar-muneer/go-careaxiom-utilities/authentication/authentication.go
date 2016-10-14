@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"go-careaxiom-utilities/filetransfer"
+	"github.com/umar-muneer/go-careaxiom-utilities/filetransfer"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
