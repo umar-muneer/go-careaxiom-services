@@ -223,6 +223,18 @@
 			"revisionTime": "2016-10-13T08:27:11Z"
 		},
 		{
+			"path": "github.com/umar-muneer/go-careaxiom-utilties",
+			"revision": ""
+		},
+		{
+			"path": "github.com/umar-muneer/go-careaxiom-utilties/authentication",
+			"revision": ""
+		},
+		{
+			"path": "github.com/umar-muneer/go-careaxiom-utilties/filetransfer",
+			"revision": ""
+		},
+		{
 			"path": "go-careaxiom-utilities/filetransfer",
 			"revision": ""
 		},
