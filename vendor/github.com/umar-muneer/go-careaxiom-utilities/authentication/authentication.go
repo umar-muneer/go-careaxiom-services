@@ -25,13 +25,29 @@ const (
 	credentialsFile = "lunch.credentials"
 )
 
-var oauthConfig = &oauth2.Config{
-	RedirectURL:  os.Getenv("OAUTH_REDIRECT_URL"),
-	ClientID:     os.Getenv("CLIENT_ID"),
-	ClientSecret: os.Getenv("CLIENT_SECRET"),
-	Scopes:       []string{"https://www.googleapis.com/auth/spreadsheets"},
-	Endpoint:     google.Endpoint,
+var oauthConfig = &oauth2.Config{}
+
+/*Parameters authentication parameters to use this package with multiple different projects*/
+type Parameters struct {
+	LoginPageHTML string
+	OAuthScopes   []string
+	BaseURL       string
 }
+
+var parameters = Parameters{}
+
+/*New set authentication parameters*/
+func New(params Parameters) {
+	parameters = params
+	oauthConfig = &oauth2.Config{
+		RedirectURL:  os.Getenv("OAUTH_REDIRECT_URL"),
+		ClientID:     os.Getenv("CLIENT_ID"),
+		ClientSecret: os.Getenv("CLIENT_SECRET"),
+		Scopes:       parameters.OAuthScopes,
+		Endpoint:     google.Endpoint,
+	}
+}
+
 var oauthState = "why do i need you??"
 
 func saveToken(token *oauth2.Token) error {
@@ -43,9 +59,15 @@ func saveToken(token *oauth2.Token) error {
 		return errors.New(errorText)
 	}
 	defer file.Close()
+	s3Folder := os.Getenv("AWS_S3_FOLDER")
+	credentialFileName := os.Getenv("CREDENTIALS_FILE_NAME")
+
+	if s3Folder == "" || credentialFileName == "" {
+		return errors.New("credential file name or folder key missing")
+	}
 	s3Writer := &filetransfer.S3IO{
 		Bucket: os.Getenv("AWS_S3_BUCKET"),
-		Key:    "whats-for-lunch/lunch.credentials",
+		Key:    s3Folder + "/" + credentialFileName,
 	}
 	writeError := json.NewEncoder(s3Writer).Encode(token)
 	if writeError != nil {
@@ -56,9 +78,17 @@ func saveToken(token *oauth2.Token) error {
 
 func loadToken() (*oauth2.Token, error) {
 	fmt.Println("loading token from file")
+
+	s3Folder := os.Getenv("AWS_S3_FOLDER")
+	credentialFileName := os.Getenv("CREDENTIALS_FILE_NAME")
+
+	if s3Folder == "" || credentialFileName == "" {
+		return nil, errors.New("credential file name or folder key missing")
+	}
 	s3Reader := &filetransfer.S3IO{
 		Bucket: os.Getenv("AWS_S3_BUCKET"),
-		Key:    "whats-for-lunch/lunch.credentials",
+		// Key:    "whats-for-lunch/lunch.credentials",
+		Key: s3Folder + "/" + credentialFileName,
 	}
 	token := &oauth2.Token{}
 	decodeErr := json.NewDecoder(s3Reader).Decode(token)
@@ -88,7 +118,7 @@ func RedirectHandler(res http.ResponseWriter, req *http.Request) {
 	state := req.FormValue("state")
 	if state != oauthState {
 		fmt.Println("invalid state variable received")
-		http.Redirect(res, req, baseURL, http.StatusTemporaryRedirect)
+		http.Redirect(res, req, parameters.BaseURL, http.StatusTemporaryRedirect)
 		return
 	}
 	token, err := oauthConfig.Exchange(context.Background(), req.FormValue("code"))
@@ -107,5 +137,5 @@ func RedirectHandler(res http.ResponseWriter, req *http.Request) {
 /*BaseHandler used to launch the entire authentication process*/
 func BaseHandler(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("printing base authentication page")
-	fmt.Fprintf(res, html)
+	fmt.Fprintf(res, parameters.LoginPageHTML)
 }

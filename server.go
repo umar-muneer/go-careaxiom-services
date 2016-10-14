@@ -13,6 +13,15 @@ import (
 
 func main() {
 	fmt.Println("registering routes")
+	authentication.New(authentication.Parameters{
+		OAuthScopes: []string{"https://www.googleapis.com/auth/spreadsheets"},
+		LoginPageHTML: `<html>
+            					<body>
+              					<a href="/whats-for-lunch/authenticate/login">Authenticate Lunch API</a>
+            					</body>
+          					</html>`,
+		BaseURL: "/whats-for-lunch/authenticate",
+	})
 	http.HandleFunc("/whats-for-lunch/authenticate", authentication.BaseHandler)
 	http.HandleFunc("/whats-for-lunch/authenticate/login", authentication.LoginHandler)
 	http.HandleFunc("/whats-for-lunch/authenticate/redirect", authentication.RedirectHandler)
