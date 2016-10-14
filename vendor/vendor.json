@@ -27,10 +27,6 @@
 			"revisionTime": "2016-08-31T20:50:42Z"
 		},
 		{
-			"path": "filetransfer",
-			"revision": ""
-		},
-		{
 			"checksumSHA1": "UN8gKREzowlQIH6xM5GJVOBhDYM=",
 			"path": "github.com/aws/aws-sdk-go",
 			"revision": "6ac30507cca29249f4d49af45a8efc98b84088ee",
@@ -203,12 +199,6 @@
 			"path": "github.com/jmespath/go-jmespath",
 			"revision": "bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d",
 			"revisionTime": "2016-08-03T19:07:31Z"
-		},
-		{
-			"checksumSHA1": "ZJDOG0lysIL2WymY+fmM0xmOYC0=",
-			"path": "github.com/umar-muneer/go-careaxiom-utilities",
-			"revision": "d7df21abfc5334a455815a73b267eb28d4ae2da4",
-			"revisionTime": "2016-10-13T08:27:11Z"
 		},
 		{
 			"checksumSHA1": "jLSVT4LqGUa4IiCp4dOcDxHdyno=",
