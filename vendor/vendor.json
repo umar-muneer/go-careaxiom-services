@@ -203,14 +203,12 @@
 		{
 			"checksumSHA1": "jLSVT4LqGUa4IiCp4dOcDxHdyno=",
 			"path": "github.com/umar-muneer/go-careaxiom-utilities/authentication",
-			"revision": "d7df21abfc5334a455815a73b267eb28d4ae2da4",
-			"revisionTime": "2016-10-13T08:27:11Z"
+			"revision": "eba622848968b85a47f3334cb81c147b2a2bd6a9",
+			"revisionTime": "2016-10-14T08:50:50Z"
 		},
 		{
-			"checksumSHA1": "omAtYoxgdSYJfv5u1MX8qPX40hE=",
-			"path": "github.com/umar-muneer/go-careaxiom-utilities/filetransfer",
-			"revision": "d7df21abfc5334a455815a73b267eb28d4ae2da4",
-			"revisionTime": "2016-10-13T08:27:11Z"
+			"path": "go-careaxiom-utilities/filetransfer",
+			"revision": ""
 		},
 		{
 			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",
