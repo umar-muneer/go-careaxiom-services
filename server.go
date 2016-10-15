@@ -4,27 +4,27 @@ import (
 	"fmt"
 	"net/http"
 
+	"go-careaxiom-services/whats-for-lunch/sources/spreadsheet"
 	"log"
 	"os"
-	"whats-for-lunch/sources/spreadsheet"
 
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
 )
 
 func main() {
-	fmt.Println("registering routes")
+	fmt.Println("registering routes for all sub apps")
 	authentication.New(authentication.Parameters{
 		OAuthScopes: []string{"https://www.googleapis.com/auth/spreadsheets"},
 		LoginPageHTML: `<html>
             					<body>
-              					<a href="/whats-for-lunch/authenticate/login">Authenticate Lunch API</a>
+              					<a href="/authenticate/login">Authenticate Careaxiom Services API</a>
             					</body>
           					</html>`,
-		BaseURL: "/whats-for-lunch/authenticate",
+		BaseURL: "/authenticate",
 	})
-	http.HandleFunc("/whats-for-lunch/authenticate", authentication.BaseHandler)
-	http.HandleFunc("/whats-for-lunch/authenticate/login", authentication.LoginHandler)
-	http.HandleFunc("/whats-for-lunch/authenticate/redirect", authentication.RedirectHandler)
+	http.HandleFunc("/authenticate", authentication.BaseHandler)
+	http.HandleFunc("/authenticate/login", authentication.LoginHandler)
+	http.HandleFunc("/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch", spreadsheet.GetMenu)
 	fmt.Println("starting server here")
 	var port = ":"

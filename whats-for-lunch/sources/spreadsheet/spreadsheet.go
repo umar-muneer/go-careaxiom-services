@@ -3,10 +3,10 @@ package spreadsheet
 import (
 	"encoding/json"
 	"fmt"
+	"go-careaxiom-services/whats-for-lunch/menu"
 	"net/http"
 	"os"
 	"strconv"
-	"whats-for-lunch/menu"
 
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
 )
