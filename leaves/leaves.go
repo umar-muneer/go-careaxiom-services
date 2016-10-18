@@ -85,6 +85,11 @@ func getLeavesStatus(employeeID string) (*leaveStatus, error) {
 	}
 
 	leaveStatusMap := createLeaveStatusMap(spreadSheetOutput.Values)
+
+	if _, present := leaveStatusMap[employeeID]; present == false {
+		fmt.Println("Employee ID ", employeeID, " not found")
+		return nil, nil
+	}
 	fmt.Println("result retrieved for employeeID "+employeeID, leaveStatusMap[employeeID])
 	return leaveStatusMap[employeeID], nil
 }
@@ -98,6 +103,11 @@ func GetLeavesStatus(res http.ResponseWriter, req *http.Request) {
 	if leaveStatusErr != nil {
 		fmt.Println("error while calculating leave balance for " + employeeID)
 		http.Error(res, leaveStatusErr.Error(), http.StatusInternalServerError)
+		return
+	}
+	if leaveStatus == nil {
+		http.Error(res, "Employee ID "+employeeID+" not found", http.StatusNotFound)
+		return
 	}
 	json.NewEncoder(res).Encode(leaveStatus)
 
