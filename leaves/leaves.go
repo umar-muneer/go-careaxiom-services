@@ -28,17 +28,28 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 	result = make(map[string]*leaveStatus, 0)
 	for i := 0; i < len(values); i++ {
 		row := values[i]
+		var total float64
+		var taken float64
+		var balance float64
+		if len(row) <= 2 {
+			continue
+		}
+		fmt.Println("parsing row ", row)
+		if len(row) >= 6 {
+			total, _ = strconv.ParseFloat(row[5], 10)
+		}
+		if len(row) >= 8 {
+			taken, _ = strconv.ParseFloat(row[7], 10)
+		}
 		if len(row) >= 10 {
-			total, _ := strconv.ParseFloat(row[5], 10)
-			taken, _ := strconv.ParseFloat(row[7], 10)
-			balance, _ := strconv.ParseFloat(row[9], 10)
-			result[row[0]] = &leaveStatus{
-				EmailID:      row[0],
-				EmployeeName: row[1],
-				Total:        total,
-				Taken:        taken,
-				Balance:      balance,
-			}
+			balance, _ = strconv.ParseFloat(row[9], 10)
+		}
+		result[row[0]] = &leaveStatus{
+			EmailID:      row[0],
+			EmployeeName: row[1],
+			Total:        total,
+			Taken:        taken,
+			Balance:      balance,
 		}
 	}
 	return result
@@ -49,6 +60,7 @@ func getLeavesStatus(employeeID string) (*leaveStatus, error) {
 	if spreadSheetClientError != nil {
 		return nil, spreadSheetClientError
 	}
+
 	url := os.Getenv("SHEETS_API_URL") + "/" +
 		os.Getenv("LEAVES_BALANCE_SPREADSHEET_ID") + "/values/" +
 		os.Getenv("LEAVES_BALANCE_SHEET_NAME") + "!A5:J100"
@@ -73,7 +85,7 @@ func getLeavesStatus(employeeID string) (*leaveStatus, error) {
 	}
 
 	leaveStatusMap := createLeaveStatusMap(spreadSheetOutput.Values)
-	fmt.Println("result retrieved for employeeID"+employeeID, leaveStatusMap[employeeID])
+	fmt.Println("result retrieved for employeeID "+employeeID, leaveStatusMap[employeeID])
 	return leaveStatusMap[employeeID], nil
 }
 
