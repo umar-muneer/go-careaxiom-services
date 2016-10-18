@@ -1,0 +1,92 @@
+package leaves
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strconv"
+
+	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
+)
+
+type spreadSheetOutput struct {
+	Range  string
+	Values [][]string
+}
+
+type leaveStatus struct {
+	EmailID      string
+	EmployeeName string
+	Total        float64
+	Taken        float64
+	Balance      float64
+}
+
+func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
+	result = make(map[string]*leaveStatus, 0)
+	for i := 0; i < len(values); i++ {
+		row := values[i]
+		if len(row) >= 10 {
+			total, _ := strconv.ParseFloat(row[5], 10)
+			taken, _ := strconv.ParseFloat(row[7], 10)
+			balance, _ := strconv.ParseFloat(row[9], 10)
+			result[row[0]] = &leaveStatus{
+				EmailID:      row[0],
+				EmployeeName: row[1],
+				Total:        total,
+				Taken:        taken,
+				Balance:      balance,
+			}
+		}
+	}
+	return result
+}
+func getLeavesStatus(employeeID string) (*leaveStatus, error) {
+	fmt.Println("calculating leaves balance for " + string(employeeID))
+	spreadSheetClient, spreadSheetClientError := authentication.GetClient()
+	if spreadSheetClientError != nil {
+		return nil, spreadSheetClientError
+	}
+	url := os.Getenv("SHEETS_API_URL") + "/" +
+		os.Getenv("LEAVES_BALANCE_SPREADSHEET_ID") + "/values/" +
+		os.Getenv("LEAVES_BALANCE_SHEET_NAME") + "!A5:J100"
+	fmt.Println("url to retrieve leaves balance is -> ", url)
+
+	spreadSheetRequest, _ := http.NewRequest("GET", url, nil)
+	spreadSheetRequest.Header.Add("Accept", "application/json")
+
+	response, responseErr := spreadSheetClient.Do(spreadSheetRequest)
+	if responseErr != nil {
+		return nil, responseErr
+	}
+	output, outputErr := ioutil.ReadAll(response.Body)
+	if outputErr != nil {
+		return nil, outputErr
+	}
+
+	spreadSheetOutput := new(spreadSheetOutput)
+	marshalError := json.Unmarshal(output, spreadSheetOutput)
+	if marshalError != nil {
+		return nil, marshalError
+	}
+
+	leaveStatusMap := createLeaveStatusMap(spreadSheetOutput.Values)
+	fmt.Println("result retrieved for employeeID"+employeeID, leaveStatusMap[employeeID])
+	return leaveStatusMap[employeeID], nil
+}
+
+/*GetLeavesStatus get leaves balance of an employee*/
+func GetLeavesStatus(res http.ResponseWriter, req *http.Request) {
+	var employeeID = req.URL.Query().Get("employeeID")
+
+	leaveStatus, leaveStatusErr := getLeavesStatus(employeeID)
+
+	if leaveStatusErr != nil {
+		fmt.Println("error while calculating leave balance for " + employeeID)
+		http.Error(res, leaveStatusErr.Error(), http.StatusInternalServerError)
+	}
+	json.NewEncoder(res).Encode(leaveStatus)
+
+}

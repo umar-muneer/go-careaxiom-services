@@ -8,6 +8,8 @@ import (
 	"log"
 	"os"
 
+	"go-careaxiom-services/leaves"
+
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
 )
 
@@ -26,6 +28,7 @@ func main() {
 	http.HandleFunc("/authenticate/login", authentication.LoginHandler)
 	http.HandleFunc("/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch", spreadsheet.GetMenu)
+	http.HandleFunc("/leaves/status", leaves.GetLeavesStatus)
 	fmt.Println("starting server here")
 	var port = ":"
 	if os.Getenv("PORT") != "" {
