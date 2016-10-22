@@ -36,5 +36,6 @@ func main() {
 	} else {
 		port += "8081"
 	}
+	fmt.Println("binding server on port ", port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }

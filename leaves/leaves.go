@@ -21,6 +21,7 @@ type leaveStatus struct {
 	EmployeeName string
 	Total        float64
 	Taken        float64
+	Earned  	 float64
 	Balance      float64
 }
 
@@ -30,6 +31,7 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 		row := values[i]
 		var total float64
 		var taken float64
+		var earned float64
 		var balance float64
 		if len(row) <= 2 {
 			continue
@@ -37,6 +39,9 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 		fmt.Println("parsing row ", row)
 		if len(row) >= 6 {
 			total, _ = strconv.ParseFloat(row[5], 10)
+		}
+		if len(row) >= 7 {
+			earned, _ = strconv.ParseFloat(row[6], 10)	
 		}
 		if len(row) >= 8 {
 			taken, _ = strconv.ParseFloat(row[7], 10)
@@ -50,6 +55,7 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 			Total:        total,
 			Taken:        taken,
 			Balance:      balance,
+			Earned: 	  earned,
 		}
 	}
 	return result
