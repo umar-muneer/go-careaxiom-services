@@ -121,6 +121,8 @@ func GetLeavesStatus(res http.ResponseWriter, req *http.Request) {
 func deleteCache() {
 	fmt.Println("Deleting Leaves Cache")
 }
+
+/*HandleCache method to handle leaves cache operation*/
 func HandleCache(res http.ResponseWriter, req *http.Request) {
 	if req.Method == "DELETE" {
 		deleteCache()
