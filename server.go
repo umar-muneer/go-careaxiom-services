@@ -29,6 +29,7 @@ func main() {
 	http.HandleFunc("/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch", spreadsheet.GetMenu)
 	http.HandleFunc("/leaves/status", leaves.GetLeavesStatus)
+	http.HandleFunc("/leaves/cache", leaves.HandleCache)
 	fmt.Println("starting server here")
 	var port = ":"
 	if os.Getenv("PORT") != "" {

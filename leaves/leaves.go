@@ -21,7 +21,7 @@ type leaveStatus struct {
 	EmployeeName string
 	Total        float64
 	Taken        float64
-	Earned  	 float64
+	Earned       float64
 	Balance      float64
 }
 
@@ -41,7 +41,7 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 			total, _ = strconv.ParseFloat(row[5], 10)
 		}
 		if len(row) >= 7 {
-			earned, _ = strconv.ParseFloat(row[6], 10)	
+			earned, _ = strconv.ParseFloat(row[6], 10)
 		}
 		if len(row) >= 8 {
 			taken, _ = strconv.ParseFloat(row[7], 10)
@@ -55,7 +55,7 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 			Total:        total,
 			Taken:        taken,
 			Balance:      balance,
-			Earned: 	  earned,
+			Earned:       earned,
 		}
 	}
 	return result
@@ -116,5 +116,13 @@ func GetLeavesStatus(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	json.NewEncoder(res).Encode(leaveStatus)
+}
 
+func deleteCache() {
+	fmt.Println("Deleting Leaves Cache")
+}
+func HandleCache(res http.ResponseWriter, req *http.Request) {
+	if req.Method == "DELETE" {
+		deleteCache()
+	}
 }
