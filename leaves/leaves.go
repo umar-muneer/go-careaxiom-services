@@ -129,6 +129,7 @@ func deleteCache() {
 }
 
 /*HandleCache method to handle leaves cache operation*/
+/*this method needs to be removed*/
 func HandleCache(res http.ResponseWriter, req *http.Request) {
 	if req.Method == "DELETE" {
 		deleteCache()
