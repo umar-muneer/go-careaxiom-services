@@ -40,11 +40,11 @@ func createLeaveStatusMap(values [][]string) (result map[string]*leaveStatus) {
 		if len(row) >= 6 {
 			total, _ = strconv.ParseFloat(row[5], 10)
 		}
-		if len(row) >= 7 {
-			earned, _ = strconv.ParseFloat(row[6], 10)
-		}
 		if len(row) >= 8 {
 			taken, _ = strconv.ParseFloat(row[7], 10)
+		}
+		if len(row) >= 9 {
+			earned, _ = strconv.ParseFloat(row[8], 10)
 		}
 		if len(row) >= 10 {
 			balance, _ = strconv.ParseFloat(row[9], 10)
