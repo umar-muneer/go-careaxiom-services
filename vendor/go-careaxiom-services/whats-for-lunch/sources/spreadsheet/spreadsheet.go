@@ -51,3 +51,8 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 		New: *newMenuEntry,
 	})
 }
+
+/*Review review the day's menu*/
+func Review(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("reviewing lunch")
+}
