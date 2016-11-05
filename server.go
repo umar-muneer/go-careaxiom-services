@@ -28,7 +28,7 @@ func main() {
 	http.HandleFunc("/authenticate/login", authentication.LoginHandler)
 	http.HandleFunc("/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch", spreadsheet.GetMenu)
-	http.HandleFunc("/lunch/review", spreadsheet.Review)
+	http.HandleFunc("/lunch/review", spreadsheet.HandleReview)
 	http.HandleFunc("/leaves/status", leaves.GetLeavesStatus)
 	http.HandleFunc("/leaves/cache", leaves.HandleCache)
 	fmt.Println("starting server here")

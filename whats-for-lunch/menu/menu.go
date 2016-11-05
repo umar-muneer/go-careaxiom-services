@@ -18,6 +18,13 @@ type Entry struct {
 	Dessert       string
 }
 
+const (
+	/*NEWMENUTYPE represents our new menu type*/
+	NEWMENUTYPE = "new"
+	/*OLDMENUTYPE represents our new menu type*/
+	OLDMENUTYPE = "old"
+)
+
 func newEntry(data []string, title string) *Entry {
 	var dessert = ""
 	var secondaryDish = ""

@@ -52,7 +52,41 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	})
 }
 
-/*Review review the day's menu*/
-func Review(res http.ResponseWriter, req *http.Request) {
-	fmt.Println("reviewing lunch")
+func postReview(menuType string, date string, score int) error {
+	fmt.Println("posting review, Score= ", score, ", Date = ", date, ", Menu Type = ", menuType)
+	return nil
+}
+
+/*HandleReview review the day's menu*/
+func HandleReview(res http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case "post":
+	case "POST":
+		fmt.Println("posting lunch review")
+		date := req.FormValue("date")
+		menuType := req.FormValue("menuType")
+		score, scoreErr := strconv.Atoi(req.FormValue("score"))
+		if menuType != menu.NEWMENUTYPE && menuType != menu.OLDMENUTYPE {
+			errorString := "incorrect menu type specified"
+			fmt.Println(errorString, " "+menuType)
+			http.Error(res, errorString, http.StatusBadRequest)
+			return
+		}
+		if scoreErr != nil {
+			fmt.Println("error in score parsing")
+			http.Error(res, scoreErr.Error(), http.StatusBadRequest)
+			return
+		}
+		if date == "" {
+			fmt.Println("no date found")
+			http.Error(res, "no date found", http.StatusBadRequest)
+			return
+		}
+		postError := postReview(menuType, date, score)
+		if postError != nil {
+			fmt.Println("error while posting review -> ", postError.Error())
+			http.Error(res, postError.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
 }
