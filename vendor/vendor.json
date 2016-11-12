@@ -213,10 +213,28 @@
 			"revisionTime": "2016-10-14T09:10:44Z"
 		},
 		{
-			"checksumSHA1": "mmHgg4vZE8qVTaiPebR0X60BlkE=",
+			"checksumSHA1": "ufEB7tAM3Z9OE2UDLBtwx8AzOXk=",
+			"path": "go-careaxiom-services",
+			"revision": "36d5d70e92b341248e8891d23a2288e62c8e23ce",
+			"revisionTime": "2016-11-12T10:41:56Z"
+		},
+		{
+			"checksumSHA1": "WiXkPCYFp/+XfahLPudamvlSvw8=",
+			"path": "go-careaxiom-services/leaves",
+			"revision": "36d5d70e92b341248e8891d23a2288e62c8e23ce",
+			"revisionTime": "2016-11-12T10:41:56Z"
+		},
+		{
+			"checksumSHA1": "3OlZFi4g/T1Ok8rZHW11GMKyYYI=",
+			"path": "go-careaxiom-services/whats-for-lunch/menu",
+			"revision": "36d5d70e92b341248e8891d23a2288e62c8e23ce",
+			"revisionTime": "2016-11-12T10:41:56Z"
+		},
+		{
+			"checksumSHA1": "jqs+W+o4j6hvbVrb+/wrUoy2OHg=",
 			"path": "go-careaxiom-services/whats-for-lunch/sources/spreadsheet",
-			"revision": "f14c4ef0de0e9c0ab1d610b2dbb55841fba73703",
-			"revisionTime": "2016-10-15T05:56:46Z"
+			"revision": "36d5d70e92b341248e8891d23a2288e62c8e23ce",
+			"revisionTime": "2016-11-12T10:41:56Z"
 		},
 		{
 			"path": "go-careaxiom-utilities/filetransfer",
