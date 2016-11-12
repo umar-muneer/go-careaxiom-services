@@ -201,6 +201,18 @@
 			"revisionTime": "2016-08-03T19:07:31Z"
 		},
 		{
+			"checksumSHA1": "avqi4lkviHdrNJ92cXCwrw9x870=",
+			"path": "github.com/lib/pq",
+			"revision": "d8eeeb8bae8896dd8e1b7e514ab0d396c4f12a1b",
+			"revisionTime": "2016-11-03T02:43:54Z"
+		},
+		{
+			"checksumSHA1": "xppHi82MLqVx1eyQmbhTesAEjx8=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "d8eeeb8bae8896dd8e1b7e514ab0d396c4f12a1b",
+			"revisionTime": "2016-11-03T02:43:54Z"
+		},
+		{
 			"checksumSHA1": "GL7E3pdVj+bIub4tw+JZ16lcayg=",
 			"path": "github.com/umar-muneer/go-careaxiom-utilities/authentication",
 			"revision": "52a20650938bea284690c9058d26e870b37fc894",
