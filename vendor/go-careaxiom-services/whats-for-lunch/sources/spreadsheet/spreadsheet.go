@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"go-careaxiom-services/whats-for-lunch/menu"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
@@ -29,8 +28,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	fmt.Println("retrieving data for old menu")
-	offset, _ := strconv.Atoi(os.Getenv("OLD_MENU_SHEET_OFFSET"))
-	oldMenu := menu.New(spreadSheetClient, os.Getenv("OLD_MENU_SPREADSHEET_ID"), offset, os.Getenv("OLD_MENU_TITLE"))
+	oldMenu := menu.New(menu.OLDMENUTYPE, spreadSheetClient)
 	oldMenuEntry, oldMenuEntryErr := oldMenu.GetMenuEntry(req.URL.Query().Get("date"))
 	if oldMenuEntryErr != nil {
 		fmt.Println("Error while getting old menu entry -> ", oldMenuEntryErr)
@@ -38,8 +36,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	fmt.Println("retrieving data for new menu")
-	newOffset, _ := strconv.Atoi(os.Getenv("NEW_MENU_SHEET_OFFSET"))
-	newMenu := menu.New(spreadSheetClient, os.Getenv("NEW_MENU_SPREADSHEET_ID"), newOffset, os.Getenv("NEW_MENU_TITLE"))
+	newMenu := menu.New(menu.NEWMENUTYPE, spreadSheetClient)
 	newMenuEntry, newMenuEntryErr := newMenu.GetMenuEntry(req.URL.Query().Get("date"))
 	if newMenuEntryErr != nil {
 		fmt.Println("Error while getting new menu entry", newMenuEntryErr)
@@ -52,10 +49,6 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	})
 }
 
-func postReview(t string, t1 string, t2 int) error {
-	return nil
-}
-
 /*HandleReview review the day's menu*/
 func HandleReview(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
@@ -64,7 +57,7 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 		fmt.Println("posting lunch review")
 		date := req.FormValue("date")
 		menuType := req.FormValue("menuType")
-		score, scoreErr := strconv.Atoi(req.FormValue("score"))
+		score, scoreErr := strconv.ParseFloat(req.FormValue("score"), 10)
 		if menuType != menu.NEWMENUTYPE && menuType != menu.OLDMENUTYPE {
 			errorString := "incorrect menu type specified"
 			fmt.Println(errorString, " "+menuType)
@@ -81,11 +74,17 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, "no date found", http.StatusBadRequest)
 			return
 		}
-		postError := postReview(menuType, date, score)
-		if postError != nil {
-			fmt.Println("error while posting review -> ", postError.Error())
-			http.Error(res, postError.Error(), http.StatusInternalServerError)
+		spreadSheetClient, spreadSheetClientErr := authentication.GetClient()
+		if spreadSheetClientErr != nil {
+			fmt.Println(spreadSheetClientErr)
+			http.Error(res, spreadSheetClientErr.Error(), http.StatusInternalServerError)
 			return
+		}
+		selectedMenu := menu.New(menuType, spreadSheetClient)
+		reviewErr := selectedMenu.PostReview(date, score)
+		if reviewErr != nil {
+			fmt.Println(reviewErr)
+			http.Error(res, reviewErr.Error(), http.StatusInternalServerError)
 		}
 	}
 }

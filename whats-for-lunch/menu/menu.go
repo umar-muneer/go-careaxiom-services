@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -16,6 +17,8 @@ type Entry struct {
 	MainDish      string
 	SecondaryDish string
 	Dessert       string
+	Score         float64
+	ReviewCount   float64
 }
 
 const (
@@ -29,15 +32,23 @@ func newEntry(data []string, title string) *Entry {
 	var dessert = ""
 	var secondaryDish = ""
 	var mainDish = ""
+	var score float64
+	var reviewCount float64
 
-	if len(data) > 2 {
+	if len(data) >= 3 {
 		mainDish = data[2]
 	}
-	if len(data) > 3 {
+	if len(data) >= 4 {
 		secondaryDish = data[3]
 	}
-	if len(data) > 4 {
+	if len(data) >= 5 {
 		dessert = data[4]
+	}
+	if len(data) >= 6 {
+		score, _ = strconv.ParseFloat(data[5], 10)
+	}
+	if len(data) >= 7 {
+		reviewCount, _ = strconv.ParseFloat(data[6], 10)
 	}
 
 	return &Entry{
@@ -45,6 +56,8 @@ func newEntry(data []string, title string) *Entry {
 		MainDish:      mainDish,
 		SecondaryDish: secondaryDish,
 		Dessert:       dessert,
+		Score:         score,
+		ReviewCount:   reviewCount,
 	}
 }
 
@@ -63,11 +76,25 @@ type spreadSheetOutput struct {
 }
 
 /*New create new menu. can be old or new based on arguments*/
-func New(client *http.Client, sheetID string, sheetOffset int, title string) *SpreadSheetMenu {
+func New(menuType string, client *http.Client) *SpreadSheetMenu {
+	var (
+		sheetID = ""
+		offset  int
+		title   = ""
+	)
+	if menuType == OLDMENUTYPE {
+		offset, _ = strconv.Atoi(os.Getenv("OLD_MENU_SHEET_OFFSET"))
+		title = os.Getenv("OLD_MENU_TITLE")
+		sheetID = os.Getenv("OLD_MENU_SPREADSHEET_ID")
+	} else {
+		offset, _ = strconv.Atoi(os.Getenv("NEW_MENU_SHEET_OFFSET"))
+		title = os.Getenv("NEW_MENU_TITLE")
+		sheetID = os.Getenv("NEW_MENU_SPREADSHEET_ID")
+	}
 	return &SpreadSheetMenu{
 		client:      client,
 		sheetID:     sheetID,
-		sheetOffset: sheetOffset,
+		sheetOffset: offset,
 		title:       title,
 	}
 }
@@ -91,7 +118,7 @@ func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
 		return new(Entry), err
 	}
 	row := menu.getMenuEntryRow(dayTime)
-	cellRange := "A" + row + ":" + "E" + row
+	cellRange := "A" + row + ":" + "G" + row
 	url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange
 	fmt.Println("day of month is", dayTime.Day())
 	fmt.Println("url to get menu is -> ", url)
@@ -114,11 +141,50 @@ func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
 	return menuEntry, nil
 }
 
-/*PostReview post a review through this method*/
-func (menu SpreadSheetMenu) PostReview(menuType string, date string, score int) error {
-	fmt.Println("posting review, Score= ", score, ", Date = ", date, ", Menu Type = ", menuType)
+type reviewBody struct {
+	MajorDimension string      `json:"majorDimension"`
+	Range          string      `json:"range"`
+	Values         [][]float64 `json:"values"`
+}
 
-	// url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange
-	// spreadSheetRequest, _ = http.NewRequest("POST", urlStr, body)
+/*PostReview post a review through this method*/
+func (menu SpreadSheetMenu) PostReview(date string, score float64) error {
+	fmt.Println("posting review, Score= ", score, ", Date = ", date)
+	dayTime, _ := time.Parse("02/01/2006", date)
+	if score < 0 {
+		score = 0
+	} else if score > 5 {
+		score = 5
+	}
+	entry, _ := menu.GetMenuEntry(date)
+	fmt.Printf("review count is: %f", entry.ReviewCount)
+
+	newReviewCount := entry.ReviewCount + 1
+	newTotalScore := ((entry.ReviewCount * entry.Score) + score) / newReviewCount
+
+	row := menu.getMenuEntryRow(dayTime)
+	cellRange := "F" + row + ":" + "G" + row
+	url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange + "?valueInputOption=RAW"
+	fmt.Println("url for posting review score -> " + url)
+
+	reviewData := &reviewBody{
+		MajorDimension: "ROWS",
+		Values:         [][]float64{{newTotalScore, newReviewCount}},
+		Range:          cellRange,
+	}
+	postBody, marshalErr := json.Marshal(reviewData)
+	if marshalErr != nil {
+		return marshalErr
+	}
+
+	req, _ := http.NewRequest("PUT", url, bytes.NewBuffer(postBody))
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Accept", "application/json")
+	_, responseErr := menu.client.Do(req)
+	if responseErr != nil {
+		return responseErr
+	}
+	fmt.Printf("final score is %f", newTotalScore)
+	fmt.Printf("Total No. of reviewers is %f", newReviewCount)
 	return nil
 }
