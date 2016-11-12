@@ -52,8 +52,7 @@ func GetMenu(res http.ResponseWriter, req *http.Request) {
 	})
 }
 
-func postReview(menuType string, date string, score int) error {
-	fmt.Println("posting review, Score= ", score, ", Date = ", date, ", Menu Type = ", menuType)
+func postReview(t string, t1 string, t2 int) error {
 	return nil
 }
 

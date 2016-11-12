@@ -72,6 +72,10 @@ func New(client *http.Client, sheetID string, sheetOffset int, title string) *Sp
 	}
 }
 
+func (menu SpreadSheetMenu) getMenuEntryRow(date time.Time) string {
+	return strconv.Itoa(menu.sheetOffset + date.Day())
+}
+
 /*GetMenuEntry gets a menu entry for a given date
   date required date in the format MMM/DD/YYYY, start of day in Asia/Karachi timezone
 */
@@ -81,14 +85,13 @@ func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
 		fmt.Println("Menu disabled for now, the caterer is probably on leave")
 		return &Entry{Title: menu.title}, nil
 	}
-
 	dayTime, err := time.Parse("02/01/2006", date)
 	fmt.Println("requested day time is", dayTime)
 	if err != nil {
 		return new(Entry), err
 	}
-	column := strconv.Itoa(menu.sheetOffset + dayTime.Day())
-	cellRange := "A" + string(column) + ":" + "E" + string(column)
+	row := menu.getMenuEntryRow(dayTime)
+	cellRange := "A" + row + ":" + "E" + row
 	url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange
 	fmt.Println("day of month is", dayTime.Day())
 	fmt.Println("url to get menu is -> ", url)
@@ -109,4 +112,13 @@ func (menu SpreadSheetMenu) GetMenuEntry(date string) (*Entry, error) {
 	}
 	menuEntry := newEntry(spreadSheetOutput.Values[0], menu.title)
 	return menuEntry, nil
+}
+
+/*PostReview post a review through this method*/
+func (menu SpreadSheetMenu) PostReview(menuType string, date string, score int) error {
+	fmt.Println("posting review, Score= ", score, ", Date = ", date, ", Menu Type = ", menuType)
+
+	// url := os.Getenv("SHEETS_API_URL") + "/" + menu.sheetID + "/values/" + cellRange
+	// spreadSheetRequest, _ = http.NewRequest("POST", urlStr, body)
+	return nil
 }

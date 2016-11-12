@@ -215,26 +215,26 @@
 		{
 			"checksumSHA1": "ufEB7tAM3Z9OE2UDLBtwx8AzOXk=",
 			"path": "go-careaxiom-services",
-			"revision": "bbaae01bbe73aa9a1ee61cd6172bec0cac5f6dad",
-			"revisionTime": "2016-11-05T04:13:00Z"
+			"revision": "879926e928ed14db32e4db2b5d21974d96e42f19",
+			"revisionTime": "2016-11-05T08:26:55Z"
 		},
 		{
 			"checksumSHA1": "WiXkPCYFp/+XfahLPudamvlSvw8=",
 			"path": "go-careaxiom-services/leaves",
-			"revision": "bbaae01bbe73aa9a1ee61cd6172bec0cac5f6dad",
-			"revisionTime": "2016-11-05T04:13:00Z"
+			"revision": "879926e928ed14db32e4db2b5d21974d96e42f19",
+			"revisionTime": "2016-11-05T08:26:55Z"
 		},
 		{
-			"checksumSHA1": "oegzUWbkhicm37H2DNMaiwaj6F8=",
+			"checksumSHA1": "T90mIblg4PtWxFEXKrxE8h4UD2Q=",
 			"path": "go-careaxiom-services/whats-for-lunch/menu",
-			"revision": "bbaae01bbe73aa9a1ee61cd6172bec0cac5f6dad",
-			"revisionTime": "2016-11-05T04:13:00Z"
+			"revision": "879926e928ed14db32e4db2b5d21974d96e42f19",
+			"revisionTime": "2016-11-05T08:26:55Z"
 		},
 		{
-			"checksumSHA1": "htjzyfMn4Er8O00nReF/2xFw3AE=",
+			"checksumSHA1": "E6bqF6QBCKxCIcEdM4InEJxLOSw=",
 			"path": "go-careaxiom-services/whats-for-lunch/sources/spreadsheet",
-			"revision": "bbaae01bbe73aa9a1ee61cd6172bec0cac5f6dad",
-			"revisionTime": "2016-11-05T04:13:00Z"
+			"revision": "879926e928ed14db32e4db2b5d21974d96e42f19",
+			"revisionTime": "2016-11-05T08:26:55Z"
 		},
 		{
 			"path": "go-careaxiom-utilities/filetransfer",
