@@ -81,10 +81,11 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		selectedMenu := menu.New(menuType, spreadSheetClient)
-		reviewErr := selectedMenu.PostReview(date, score)
-		if reviewErr != nil {
-			fmt.Println(reviewErr)
-			http.Error(res, reviewErr.Error(), http.StatusInternalServerError)
+		reviewRes := selectedMenu.PostReview(date, score)
+		if reviewRes.type == "error" {
+			fmt.Println(reviewRes)
+			http.Error(res, reviewRes.body.Error(), http.StatusInternalServerError)
 		}
+		json.NewEncoder(res).Encode(reviewRes)
 	}
 }
