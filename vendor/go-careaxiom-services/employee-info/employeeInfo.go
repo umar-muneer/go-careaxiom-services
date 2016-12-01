@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
 )
@@ -13,12 +14,15 @@ import (
 type employeeInfo struct {
 	Email       string `json:"email"`
 	Name        string `json:"name"`
-	BirthDate   string `json:"birthDate"`
-	JoiningDate string `json:"joiningDate"`
+	birthDate   time.Time
+	joiningDate time.Time
 }
 
 func (info employeeInfo) String() string {
 	return info.Name
+}
+func getHashKey(date time.Time) string {
+	return fmt.Sprintf("%d/%d", date.Day(), date.Month())
 }
 
 type spreadSheetOutput struct {
@@ -26,7 +30,11 @@ type spreadSheetOutput struct {
 	Values [][]string
 }
 
-func createEmployeeInfo(data []string) (result *employeeInfo) {
+func createEmployeeInfo(data []string) (result *employeeInfo, err error) {
+	var (
+		birthDate   time.Time
+		joiningDate time.Time
+	)
 	info := new(employeeInfo)
 	if len(data) >= 1 {
 		info.Name = data[0]
@@ -35,34 +43,47 @@ func createEmployeeInfo(data []string) (result *employeeInfo) {
 		info.Email = data[1]
 	}
 	if len(data) >= 3 {
-		info.BirthDate = data[2]
+		birthDate, err = time.Parse("02/01/2006", data[2])
 	}
 	if len(data) >= 4 {
-		info.JoiningDate = data[3]
+		joiningDate, err = time.Parse("02/01/2006", data[3])
 	}
-	return info
+	if err != nil {
+		return nil, err
+	}
+	info.birthDate = birthDate
+	info.joiningDate = joiningDate
+	return info, nil
 }
-func createBirthdaysMap(data [][]string) (result map[string][]*employeeInfo) {
+func createBirthdaysMap(data [][]string) (result map[string][]*employeeInfo, err error) {
 	fmt.Println("creating birthdays map")
 	result = map[string][]*employeeInfo{}
 	for i := 0; i < len(data); i++ {
-		info := createEmployeeInfo(data[i])
-		employees, _ := result[info.BirthDate]
+		info, err := createEmployeeInfo(data[i])
+		if err != nil {
+			return nil, err
+		}
+		key := getHashKey(info.birthDate)
+		employees, _ := result[key]
 		employees = append(employees, info)
-		result[info.BirthDate] = employees
+		result[key] = employees
 	}
-	return result
+	return result, nil
 }
-func createAnniversariesMap(data [][]string) (result map[string][]*employeeInfo) {
+func createAnniversariesMap(data [][]string) (result map[string][]*employeeInfo, err error) {
 	fmt.Println("creating anniversaries map")
 	result = map[string][]*employeeInfo{}
 	for i := 0; i < len(data); i++ {
-		info := createEmployeeInfo(data[i])
-		employees, _ := result[info.JoiningDate]
+		info, err := createEmployeeInfo(data[i])
+		if err != nil {
+			return nil, err
+		}
+		key := getHashKey(info.joiningDate)
+		employees, _ := result[key]
 		employees = append(employees, info)
-		result[info.JoiningDate] = employees
+		result[key] = employees
 	}
-	return result
+	return result, nil
 }
 
 func getBirthdaysAndAnniversariesFromSpreadsheet() ([][]string, error) {
@@ -73,7 +94,7 @@ func getBirthdaysAndAnniversariesFromSpreadsheet() ([][]string, error) {
 	}
 	url := os.Getenv("SHEETS_API_URL") + "/" +
 		os.Getenv("BIRTHDAY_ANNIVERSARIES_SPREADSHEET_ID") + "/values/" +
-		os.Getenv("BIRTHDAY_ANNIVERSARIES_SHEET_NAME") + "!A1:D200"
+		os.Getenv("BIRTHDAY_ANNIVERSARIES_SHEET_NAME") + "!A2:D200"
 
 	spreadSheetRequest, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -104,8 +125,8 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "get":
 	case "GET":
-		date := req.URL.Query().Get("date")
-		if date == "" {
+		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
+		if err != nil {
 			fmt.Println("no date passed")
 			http.Error(res, "no date passed", http.StatusBadRequest)
 			return
@@ -117,9 +138,14 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		birthdays := createBirthdaysMap(output)
-		fmt.Println("Birthday Employees On", date, " are-> ", birthdays[date])
-		json.NewEncoder(res).Encode(birthdays[date])
+		birthdays, err := createBirthdaysMap(output)
+		if err != nil {
+			fmt.Println("error while creating birthday map", err.Error())
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fmt.Println("Employees with birthdays on", date, " are-> ", birthdays[getHashKey(date)])
+		json.NewEncoder(res).Encode(birthdays[getHashKey(date)])
 		break
 	}
 }
@@ -129,8 +155,8 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 	switch req.Method {
 	case "get":
 	case "GET":
-		date := req.URL.Query().Get("date")
-		if date == "" {
+		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
+		if err != nil {
 			fmt.Println("no date passed")
 			http.Error(res, "no date passed", http.StatusBadRequest)
 			return
@@ -141,9 +167,15 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		anniversaries := createAnniversariesMap(output)
-		fmt.Println("Birthday Employees On", date, " are-> ", anniversaries[date])
-		json.NewEncoder(res).Encode(anniversaries[date])
+		anniversaries, err := createAnniversariesMap(output)
+		if err != nil {
+			fmt.Println("error while creating anniversary map", err.Error())
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		key := getHashKey(date)
+		fmt.Println("Employees with anniversaries on", date, " are-> ", anniversaries[key])
+		json.NewEncoder(res).Encode(anniversaries[key])
 		break
 	}
 }
