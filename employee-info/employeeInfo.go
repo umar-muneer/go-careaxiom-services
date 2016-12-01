@@ -17,6 +17,10 @@ type employeeInfo struct {
 	JoiningDate string `json:"joiningDate"`
 }
 
+func (info employeeInfo) String() string {
+	return info.Name
+}
+
 type spreadSheetOutput struct {
 	Range  string
 	Values [][]string
