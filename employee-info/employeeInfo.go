@@ -53,11 +53,20 @@ func createBirthdaysMap(data [][]string) (result map[string][]*employeeInfo) {
 	}
 	return result
 }
-func createAnniversariesMap(data [][]string) (result map[string]*employeeInfo) {
-	return nil
+func createAnniversariesMap(data [][]string) (result map[string][]*employeeInfo) {
+	fmt.Println("creating anniversaries map")
+	result = map[string][]*employeeInfo{}
+	for i := 0; i < len(data); i++ {
+		info := createEmployeeInfo(data[i])
+		employees, _ := result[info.JoiningDate]
+		employees = append(employees, info)
+		result[info.JoiningDate] = employees
+	}
+	return result
 }
 
 func getBirthdaysAndAnniversariesFromSpreadsheet() ([][]string, error) {
+	fmt.Println("retrieving data from birthdays and anniversaries sheet")
 	spreadSheetClient, err := authentication.GetClient()
 	if err != nil {
 		return nil, err
@@ -109,7 +118,7 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		birthdays := createBirthdaysMap(output)
-		fmt.Println("Birthday Employees On", date, " are-> ", birthdays[date])
+		fmt.Println("Employees with birthdays on", date, " are-> ", birthdays[date])
 		json.NewEncoder(res).Encode(birthdays[date])
 		break
 	}
@@ -126,7 +135,15 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 			http.Error(res, "no date passed", http.StatusBadRequest)
 			return
 		}
-		fmt.Println("which employees have anniversaries today")
+		output, err := getBirthdaysAndAnniversariesFromSpreadsheet()
+		if err != nil {
+			fmt.Println("error while reading anniversary info from sheet", err.Error())
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		anniversaries := createAnniversariesMap(output)
+		fmt.Println("Employees with anniversaries on", date, " are-> ", anniversaries[date])
+		json.NewEncoder(res).Encode(anniversaries[date])
 		break
 	}
 }
