@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 
+	"go-careaxiom-services/employee-info"
 	"go-careaxiom-services/leaves"
 
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
@@ -31,6 +32,8 @@ func main() {
 	http.HandleFunc("/lunch/review", spreadsheet.HandleReview)
 	http.HandleFunc("/leaves/status", leaves.GetLeavesStatus)
 	http.HandleFunc("/leaves/cache", leaves.HandleCache)
+	http.HandleFunc("/birthdays/employees", employeeInfo.GetEmployeesWithBirthdays)
+	http.HandleFunc("/anniversaries/employees", employeeInfo.GetEmployeesWithWorkAnniversaries)
 	fmt.Println("starting server here")
 	var port = ":"
 	if os.Getenv("PORT") != "" {

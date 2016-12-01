@@ -75,7 +75,7 @@ func getLeavesStatus(employeeID string) (*leaveStatus, error) {
 
 	url := os.Getenv("SHEETS_API_URL") + "/" +
 		os.Getenv("LEAVES_BALANCE_SPREADSHEET_ID") + "/values/" +
-		os.Getenv("LEAVES_BALANCE_SHEET_NAME") + "!A5:J100"
+		os.Getenv("LEAVES_BALANCE_SHEET_NAME") + "!A1:J100"
 	fmt.Println("url to retrieve leaves balance is -> ", url)
 
 	spreadSheetRequest, _ := http.NewRequest("GET", url, nil)
