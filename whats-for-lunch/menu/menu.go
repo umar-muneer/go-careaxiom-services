@@ -150,11 +150,14 @@ type reviewBody struct {
 /*PostReview post a review through this method*/
 func (menu SpreadSheetMenu) PostReview(date string, score float64) (float64, error) {
 	fmt.Println("posting review, Score= ", score, ", Date = ", date)
-	dayTime, _ := time.Parse("02/01/2006", date)
+	dayTime, err := time.Parse("02/01/2006", date)
 	if score < 0 {
 		score = 0
 	} else if score > 5 {
 		score = 5
+	}
+	if err != nil {
+		return 0, err
 	}
 	entry, _ := menu.GetMenuEntry(date)
 	fmt.Printf("review count is: %f", entry.ReviewCount)
