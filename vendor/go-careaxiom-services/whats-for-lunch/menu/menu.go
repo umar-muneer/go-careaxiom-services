@@ -148,7 +148,7 @@ type reviewBody struct {
 }
 
 /*PostReview post a review through this method*/
-func (menu SpreadSheetMenu) PostReview(date string, score float64) error {
+func (menu SpreadSheetMenu) PostReview(date string, score float64) (float64, error) {
 	fmt.Println("posting review, Score= ", score, ", Date = ", date)
 	dayTime, _ := time.Parse("02/01/2006", date)
 	if score < 0 {
@@ -174,7 +174,7 @@ func (menu SpreadSheetMenu) PostReview(date string, score float64) error {
 	}
 	postBody, marshalErr := json.Marshal(reviewData)
 	if marshalErr != nil {
-		return marshalErr
+		return 0, marshalErr
 	}
 
 	req, _ := http.NewRequest("PUT", url, bytes.NewBuffer(postBody))
@@ -182,9 +182,9 @@ func (menu SpreadSheetMenu) PostReview(date string, score float64) error {
 	req.Header.Add("Accept", "application/json")
 	_, responseErr := menu.client.Do(req)
 	if responseErr != nil {
-		return responseErr
+		return 0, responseErr
 	}
 	fmt.Printf("final score is %f", newTotalScore)
 	fmt.Printf("Total No. of reviewers is %f", newReviewCount)
-	return nil
+	return newTotalScore, nil
 }
