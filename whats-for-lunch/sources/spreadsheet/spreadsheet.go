@@ -6,11 +6,14 @@ import (
 	"go-careaxiom-services/whats-for-lunch/menu"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/umar-muneer/go-careaxiom-utilities/authentication"
 )
 
 var apiURL = "https://sheets.googleapis.com/v4/spreadsheets"
+
+var mutex sync.Mutex
 
 /*Output representation of a menu for a day*/
 type Output struct {
@@ -87,12 +90,7 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, reviewErr.Error(), http.StatusInternalServerError)
 		}
 		json.NewEncoder(res).Encode(currentScore)
-	}
-}
-
-/*GetScore get score of a menu for a particular date*/
-func GetScore(res http.ResponseWriter, req *http.Request) {
-	switch req.Method {
+		break
 	case "get":
 	case "GET":
 		date := req.URL.Query().Get("date")
@@ -126,5 +124,12 @@ func GetScore(res http.ResponseWriter, req *http.Request) {
 		}
 		json.NewEncoder(res).Encode(score)
 		break
+	}
+}
+
+/*GetScore get score of a menu for a particular date*/
+func GetScore(res http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+
 	}
 }

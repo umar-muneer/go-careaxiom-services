@@ -30,7 +30,6 @@ func main() {
 	http.HandleFunc("/authenticate/redirect", authentication.RedirectHandler)
 	http.HandleFunc("/whats-for-lunch", spreadsheet.GetMenu)
 	http.HandleFunc("/lunch/review", spreadsheet.HandleReview)
-	http.HandleFunc("/lunch/score", spreadsheet.GetScore)
 	http.HandleFunc("/leaves/status", leaves.GetLeavesStatus)
 	http.HandleFunc("/leaves/cache", leaves.HandleCache)
 	http.HandleFunc("/birthdays/employees", employeeInfo.GetEmployeesWithBirthdays)
