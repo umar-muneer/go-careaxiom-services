@@ -89,3 +89,42 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 		json.NewEncoder(res).Encode(currentScore)
 	}
 }
+
+/*GetScore get score of a menu for a particular date*/
+func GetScore(res http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case "get":
+	case "GET":
+		date := req.URL.Query().Get("date")
+		fmt.Println("retrieving score for date ->", date)
+		if date == "" {
+			var errString = "incorrect date specified"
+			fmt.Println(errString)
+			http.Error(res, errString, http.StatusInternalServerError)
+			return
+		}
+		menuType := req.URL.Query().Get("menuType")
+		fmt.Println("retrieving score for menu type -> ", menuType)
+		if menuType != menu.NEWMENUTYPE && menuType != menu.OLDMENUTYPE {
+			var errString = "menu type should either be new or old"
+			fmt.Println(errString)
+			http.Error(res, errString, http.StatusInternalServerError)
+			return
+		}
+		spreadSheetClient, spreadSheetClientErr := authentication.GetClient()
+		if spreadSheetClientErr != nil {
+			fmt.Println(spreadSheetClientErr)
+			http.Error(res, spreadSheetClientErr.Error(), http.StatusInternalServerError)
+			return
+		}
+		selectedMenu := menu.New(menuType, spreadSheetClient)
+		score, err := selectedMenu.GetScore(date)
+		if err != nil {
+			fmt.Println(err.Error())
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		json.NewEncoder(res).Encode(score)
+		break
+	}
+}

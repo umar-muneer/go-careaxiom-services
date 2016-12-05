@@ -191,3 +191,12 @@ func (menu SpreadSheetMenu) PostReview(date string, score float64) (float64, err
 	fmt.Printf("Total No. of reviewers is %f", newReviewCount)
 	return newTotalScore, nil
 }
+
+/*GetScore get the score for a menu entry at a specified date format = DD/MM/YYYY*/
+func (menu SpreadSheetMenu) GetScore(date string) (score float64, err error) {
+	entry, err := menu.GetMenuEntry(date)
+	if err != nil {
+		return 0, err
+	}
+	return entry.Score, nil
+}
