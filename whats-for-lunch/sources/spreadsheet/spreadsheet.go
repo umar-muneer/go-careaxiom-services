@@ -57,6 +57,7 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "post":
 	case "POST":
+		mutex.Lock()
 		fmt.Println("posting lunch review")
 		date := req.FormValue("date")
 		menuType := req.FormValue("menuType")
@@ -90,6 +91,7 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, reviewErr.Error(), http.StatusInternalServerError)
 		}
 		json.NewEncoder(res).Encode(currentScore)
+		mutex.Unlock()
 		break
 	case "get":
 	case "GET":
