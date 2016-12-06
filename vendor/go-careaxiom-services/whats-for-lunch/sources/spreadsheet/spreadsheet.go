@@ -66,22 +66,26 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 			errorString := "incorrect menu type specified"
 			fmt.Println(errorString, " "+menuType)
 			http.Error(res, errorString, http.StatusBadRequest)
+			mutex.Unlock()
 			return
 		}
 		if scoreErr != nil {
 			fmt.Println("error in score parsing")
 			http.Error(res, scoreErr.Error(), http.StatusBadRequest)
+			mutex.Unlock()
 			return
 		}
 		if date == "" {
 			fmt.Println("no date found")
 			http.Error(res, "no date found", http.StatusBadRequest)
+			mutex.Unlock()
 			return
 		}
 		spreadSheetClient, spreadSheetClientErr := authentication.GetClient()
 		if spreadSheetClientErr != nil {
 			fmt.Println(spreadSheetClientErr)
 			http.Error(res, spreadSheetClientErr.Error(), http.StatusInternalServerError)
+			mutex.Unlock()
 			return
 		}
 		selectedMenu := menu.New(menuType, spreadSheetClient)
@@ -89,6 +93,8 @@ func HandleReview(res http.ResponseWriter, req *http.Request) {
 		if reviewErr != nil {
 			fmt.Println(reviewErr)
 			http.Error(res, reviewErr.Error(), http.StatusInternalServerError)
+			mutex.Unlock()
+			return
 		}
 		json.NewEncoder(res).Encode(currentScore)
 		mutex.Unlock()
