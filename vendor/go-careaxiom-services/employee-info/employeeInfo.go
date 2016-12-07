@@ -145,7 +145,13 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		fmt.Println("Employees with birthdays on", date, " are-> ", birthdays[getHashKey(date)])
-		json.NewEncoder(res).Encode(birthdays[getHashKey(date)])
+		employeesWithBirthdays, ok := birthdays[getHashKey(date)]
+
+		if ok == false {
+			http.Error(res, "No Birthdays Found", http.StatusNotFound)
+			return
+		}
+		json.NewEncoder(res).Encode(employeesWithBirthdays)
 		break
 	}
 }
@@ -175,7 +181,13 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 		}
 		key := getHashKey(date)
 		fmt.Println("Employees with anniversaries on", date, " are-> ", anniversaries[key])
-		json.NewEncoder(res).Encode(anniversaries[key])
+		employeesWithAnniversaries, ok := anniversaries[getHashKey(date)]
+
+		if ok == false {
+			http.Error(res, "No Anniversaries Found", http.StatusNotFound)
+			return
+		}
+		json.NewEncoder(res).Encode(employeesWithAnniversaries)
 		break
 	}
 }
