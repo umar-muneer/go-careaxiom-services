@@ -192,11 +192,20 @@ func (menu SpreadSheetMenu) PostReview(date string, score float64) (float64, err
 	return newTotalScore, nil
 }
 
+/*Review get review information*/
+type Review struct {
+	Score float64 `json:"score"`
+	Count float64 `json:"reviewerCount"`
+}
+
 /*GetScore get the score for a menu entry at a specified date format = DD/MM/YYYY*/
-func (menu SpreadSheetMenu) GetScore(date string) (score float64, err error) {
+func (menu SpreadSheetMenu) GetScore(date string) (result *Review, err error) {
 	entry, err := menu.GetMenuEntry(date)
 	if err != nil {
-		return 0, err
+		return new(Review), err
 	}
-	return entry.Score, nil
+	return &Review{
+		Score: entry.Score,
+		Count: entry.ReviewCount,
+	}, nil
 }
