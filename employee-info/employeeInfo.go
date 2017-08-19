@@ -16,13 +16,14 @@ type employeeInfo struct {
 	Name        string `json:"name"`
 	birthDate   time.Time
 	joiningDate time.Time
+	office      string
 }
 
 func (info employeeInfo) String() string {
 	return info.Name
 }
-func getHashKey(date time.Time) string {
-	return fmt.Sprintf("%d/%d", date.Day(), date.Month())
+func getHashKey(date time.Time, office string) string {
+	return fmt.Sprintf("%d/%d/%s", date.Day(), date.Month(), office)
 }
 
 type spreadSheetOutput struct {
@@ -48,6 +49,9 @@ func createEmployeeInfo(data []string) (result *employeeInfo, err error) {
 	if len(data) >= 4 {
 		joiningDate, err = time.Parse("02/01/2006", data[3])
 	}
+	if len(data) >= 5 {
+		info.office = data[4]
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +67,7 @@ func createBirthdaysMap(data [][]string) (result map[string][]*employeeInfo, err
 		if err != nil {
 			return nil, err
 		}
-		key := getHashKey(info.birthDate)
+		key := getHashKey(info.birthDate, info.office)
 		employees, _ := result[key]
 		employees = append(employees, info)
 		result[key] = employees
@@ -78,7 +82,7 @@ func createAnniversariesMap(data [][]string) (result map[string][]*employeeInfo,
 		if err != nil {
 			return nil, err
 		}
-		key := getHashKey(info.joiningDate)
+		key := getHashKey(info.joiningDate, info.office)
 		employees, _ := result[key]
 		employees = append(employees, info)
 		result[key] = employees
@@ -94,7 +98,7 @@ func getBirthdaysAndAnniversariesFromSpreadsheet() ([][]string, error) {
 	}
 	url := os.Getenv("SHEETS_API_URL") + "/" +
 		os.Getenv("BIRTHDAY_ANNIVERSARIES_SPREADSHEET_ID") + "/values/" +
-		os.Getenv("BIRTHDAY_ANNIVERSARIES_SHEET_NAME") + "!A2:D200"
+		os.Getenv("BIRTHDAY_ANNIVERSARIES_SHEET_NAME") + "!A2:E200"
 
 	spreadSheetRequest, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -126,6 +130,8 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 	case "get":
 	case "GET":
 		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
+		office := req.URL.Query().Get("office")
+
 		if err != nil {
 			fmt.Println("no date passed")
 			http.Error(res, "no date passed", http.StatusBadRequest)
@@ -144,8 +150,11 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Println("Employees with birthdays on", date, " are-> ", birthdays[getHashKey(date)])
-		employeesWithBirthdays, ok := birthdays[getHashKey(date)]
+		key := getHashKey(date, office)
+		fmt.Println(key, "key is")
+		fmt.Println(birthdays, "birthdays map is")
+		fmt.Println("Employees with birthdays on", date, " are-> ", birthdays[key])
+		employeesWithBirthdays, ok := birthdays[key]
 
 		if ok == false {
 			http.Error(res, "No Birthdays Found", http.StatusNotFound)
@@ -162,6 +171,7 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 	case "get":
 	case "GET":
 		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
+		office := req.URL.Query().Get("office")
 		if err != nil {
 			fmt.Println("no date passed")
 			http.Error(res, "no date passed", http.StatusBadRequest)
@@ -179,9 +189,9 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		key := getHashKey(date)
+		key := getHashKey(date, office)
 		fmt.Println("Employees with anniversaries on", date, " are-> ", anniversaries[key])
-		employeesWithAnniversaries, ok := anniversaries[getHashKey(date)]
+		employeesWithAnniversaries, ok := anniversaries[key]
 
 		if ok == false {
 			http.Error(res, "No Anniversaries Found", http.StatusNotFound)
