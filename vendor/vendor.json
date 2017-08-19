@@ -1,5 +1,8 @@
 {
 	"comment": "",
+	"heroku": {
+		"sync": false
+	},
 	"ignore": "test appengine",
 	"package": [
 		{
@@ -215,32 +218,32 @@
 		{
 			"checksumSHA1": "Jpg9CLnv0ynjdQTvlDQV+hBi13E=",
 			"path": "go-careaxiom-services",
-			"revision": "f91262beee99a8bdd6d00fae112666806539ca8c",
-			"revisionTime": "2016-12-09T17:54:46Z"
+			"revision": "3e0b46cb68227cdf991c35c6002d323e05afd2ba",
+			"revisionTime": "2017-08-19T07:43:27Z"
 		},
 		{
-			"checksumSHA1": "qg4ls/xNGD9+zOKRf9pzZjyhBnU=",
+			"checksumSHA1": "Qb7JFgOmIwO6B0//TRXQxuQZjnc=",
 			"path": "go-careaxiom-services/employee-info",
-			"revision": "f91262beee99a8bdd6d00fae112666806539ca8c",
-			"revisionTime": "2016-12-09T17:54:46Z"
+			"revision": "3e0b46cb68227cdf991c35c6002d323e05afd2ba",
+			"revisionTime": "2017-08-19T07:43:27Z"
 		},
 		{
 			"checksumSHA1": "4ZXqV1ywVIRKvYHhLOnGE28ottU=",
 			"path": "go-careaxiom-services/leaves",
-			"revision": "f91262beee99a8bdd6d00fae112666806539ca8c",
-			"revisionTime": "2016-12-09T17:54:46Z"
+			"revision": "3e0b46cb68227cdf991c35c6002d323e05afd2ba",
+			"revisionTime": "2017-08-19T07:43:27Z"
 		},
 		{
 			"checksumSHA1": "lwcJiUskjl4FU91Hu9qZxLOj2hU=",
 			"path": "go-careaxiom-services/whats-for-lunch/menu",
-			"revision": "f91262beee99a8bdd6d00fae112666806539ca8c",
-			"revisionTime": "2016-12-09T17:54:46Z"
+			"revision": "3e0b46cb68227cdf991c35c6002d323e05afd2ba",
+			"revisionTime": "2017-08-19T07:43:27Z"
 		},
 		{
 			"checksumSHA1": "Gy/ooHp4/uymDFn0jy0g+jSz8Iw=",
 			"path": "go-careaxiom-services/whats-for-lunch/sources/spreadsheet",
-			"revision": "f91262beee99a8bdd6d00fae112666806539ca8c",
-			"revisionTime": "2016-12-09T17:54:46Z"
+			"revision": "3e0b46cb68227cdf991c35c6002d323e05afd2ba",
+			"revisionTime": "2017-08-19T07:43:27Z"
 		},
 		{
 			"path": "go-careaxiom-utilities/filetransfer",
@@ -353,8 +356,5 @@
 			"revision": ""
 		}
 	],
-	"rootPath": "go-careaxiom-services",
-	"heroku": {
-		"sync": false
-	}
+	"rootPath": "go-careaxiom-services"
 }

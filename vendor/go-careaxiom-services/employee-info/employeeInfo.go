@@ -129,9 +129,13 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "get":
 	case "GET":
-		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
 		office := req.URL.Query().Get("office")
-
+		if office == "" {
+			fmt.Println("no office passed")
+			http.Error(res, "no office passed", http.StatusBadRequest)
+			return
+		}
+		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
 		if err != nil {
 			fmt.Println("no date passed")
 			http.Error(res, "no date passed", http.StatusBadRequest)
@@ -151,8 +155,6 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		key := getHashKey(date, office)
-		fmt.Println(key, "key is")
-		fmt.Println(birthdays, "birthdays map is")
 		fmt.Println("Employees with birthdays on", date, " are-> ", birthdays[key])
 		employeesWithBirthdays, ok := birthdays[key]
 
@@ -170,8 +172,13 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 	switch req.Method {
 	case "get":
 	case "GET":
-		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
 		office := req.URL.Query().Get("office")
+		if office == "" {
+			fmt.Println("no office passed")
+			http.Error(res, "no office passed", http.StatusBadRequest)
+			return
+		}
+		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
 		if err != nil {
 			fmt.Println("no date passed")
 			http.Error(res, "no date passed", http.StatusBadRequest)
