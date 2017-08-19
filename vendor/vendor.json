@@ -353,5 +353,8 @@
 			"revision": ""
 		}
 	],
-	"rootPath": "go-careaxiom-services"
+	"rootPath": "go-careaxiom-services",
+	"heroku": {
+		"sync": false
+	}
 }
