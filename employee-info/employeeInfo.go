@@ -135,6 +135,11 @@ func GetEmployeesWithBirthdays(res http.ResponseWriter, req *http.Request) {
 			http.Error(res, "no office passed", http.StatusBadRequest)
 			return
 		}
+		if office != "PK" && office != "US" {
+			fmt.Println("only PK and US offices are currently supported")
+			http.Error(res, "unsupported office", http.StatusBadRequest)
+			return
+		}
 		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
 		if err != nil {
 			fmt.Println("no date passed")
@@ -176,6 +181,11 @@ func GetEmployeesWithWorkAnniversaries(res http.ResponseWriter, req *http.Reques
 		if office == "" {
 			fmt.Println("no office passed")
 			http.Error(res, "no office passed", http.StatusBadRequest)
+			return
+		}
+		if office != "PK" && office != "US" {
+			fmt.Println("only PK and US offices are currently supported")
+			http.Error(res, "unsupported office", http.StatusBadRequest)
 			return
 		}
 		date, err := time.Parse("02/01/2006", req.URL.Query().Get("date"))
