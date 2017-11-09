@@ -18,10 +18,10 @@ import (
 const (
 	html = `<html>
             <body>
-              <a href="authenticate/login">Log in with Google</a>
+              <a href="/authenticate/login">Log in with Google</a>
             </body>
           </html>`
-	baseURL         = "authenticate"
+	baseURL         = "/authenticate"
 	credentialsFile = "lunch.credentials"
 )
 
