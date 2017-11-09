@@ -109,7 +109,7 @@ func GetClient() (*http.Client, error) {
 
 /*LoginHandler main controller method which redirects the browser to a page to authorize the app*/
 func LoginHandler(res http.ResponseWriter, req *http.Request) {
-	url := oauthConfig.AuthCodeURL(oauthState)
+	url := oauthConfig.AuthCodeURL(oauthState, oauth2.AccessTypeOffline)
 	fmt.Println("redirecting to authorization page", url)
 	http.Redirect(res, req, url, http.StatusTemporaryRedirect)
 }
